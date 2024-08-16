@@ -37,7 +37,7 @@ bool Window::Initialize()
     
     return true;
 }
-o
+
 void Window::Run()
 {
 

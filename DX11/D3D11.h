@@ -66,6 +66,7 @@ public:
         UINT Offset = 0;
         D3DDeviceContext->IASetVertexBuffers(0, 1, &TriangleBuffer, &Stride, &Offset);
         D3DDeviceContext->Draw(3, 0);
+
     }
 private:
 
@@ -74,6 +75,5 @@ private:
     Microsoft::WRL::ComPtr<ID3D11DeviceContext> D3DDeviceContext;
    
     Microsoft::WRL::ComPtr<ID3D11Resource> Buffer ;
-
     Microsoft::WRL::ComPtr<ID3D11RenderTargetView> RenderTargetView ;
 };
