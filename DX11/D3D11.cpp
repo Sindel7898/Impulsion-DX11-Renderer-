@@ -1,5 +1,13 @@
 #include "D3D11.h"
 
+
+#pragma comment(lib, "d3d11.lib")
+#pragma comment(lib, "dxgi.lib")
+#pragma comment(lib, "d3dcompiler.lib")
+#pragma comment(lib, "winmm.lib")
+#pragma comment(lib, "dxguid.lib")
+
+
 D3D11::D3D11(Window* windowApp)
 {
    
@@ -35,7 +43,7 @@ D3D11::D3D11(Window* windowApp)
     SwapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
     SwapChainDesc.Flags = 0;
 
-    HRESULT hr = D3D11CreateDeviceAndSwapChain(
+      D3D11CreateDeviceAndSwapChain(
         nullptr,
         D3D_DRIVER_TYPE::D3D_DRIVER_TYPE_HARDWARE,
         nullptr,
@@ -50,7 +58,7 @@ D3D11::D3D11(Window* windowApp)
         &D3DDeviceContext);
 
    
-
+      //GET BUFFERS TO RENDER A COLOR TO IT 
     SwapChain->GetBuffer(0, __uuidof(ID3D11Resource),&Buffer);
 
     D3DDevice->CreateRenderTargetView(Buffer.Get(), nullptr, &RenderTargetView);
@@ -69,12 +77,15 @@ D3D11::~D3D11()
     D3DDevice->Release();
     D3DDeviceContext->Release();
 }
+
 void D3D11::ClearBuffer(float red, float green, float blue)
 {
     float clour[] = { red,green,blue,1.0f };
 
     D3DDeviceContext->ClearRenderTargetView(RenderTargetView.Get(), clour);
 
+
+    DrawTriangle();
 }
 
 
