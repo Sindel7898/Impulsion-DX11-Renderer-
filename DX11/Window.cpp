@@ -17,11 +17,13 @@ bool Window::Initialize()
     _width = static_cast<int32_t>(videoMode->width * 0.9f);
     _height = static_cast<int32_t>(videoMode->height * 0.9f);
 
+   
     glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_FALSE);
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 
     _window = glfwCreateWindow(_width, _height, WindowTitle.data(), nullptr, nullptr);
 
+    
     if (_window == nullptr)
     {
         std::cout << "GLFW: Unable to create window\n";

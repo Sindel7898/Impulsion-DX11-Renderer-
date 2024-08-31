@@ -10,7 +10,9 @@
 
 D3D11::D3D11(Window* windowApp)
 {
-   
+    windowContextHolder = windowApp;
+    
+    //CREATING DEVICE AND SWAPCHAIN  /////////////////////////////////////////////////////////
     DXGI_RATIONAL MonitorRefreshRatedData{};
 
     MonitorRefreshRatedData.Numerator = 60;
@@ -47,7 +49,7 @@ D3D11::D3D11(Window* windowApp)
         nullptr,
         D3D_DRIVER_TYPE::D3D_DRIVER_TYPE_HARDWARE,
         nullptr,
-        0,
+          D3D11_CREATE_DEVICE_DEBUG,
         nullptr,
         0,
         D3D11_SDK_VERSION,
@@ -58,14 +60,54 @@ D3D11::D3D11(Window* windowApp)
         &D3DDeviceContext);
 
    
-      //GET BUFFERS TO RENDER A COLOR TO IT 
-    SwapChain->GetBuffer(0, __uuidof(ID3D11Resource),&Buffer);
+    //GET BackBuffer and Create a render TargetView to add color to the buffer
+
+     SwapChain->GetBuffer(0, __uuidof(ID3D11Resource),&Buffer);
 
     D3DDevice->CreateRenderTargetView(Buffer.Get(), nullptr, &RenderTargetView);
 
 
 
-    }
+    //// Creating a depth stencil state and setting it to the OUT PUT MERGER //////////////////////////////////////////////////// 
+   
+    D3D11_DEPTH_STENCIL_DESC DepthStencilStateDesc;
+    DepthStencilStateDesc.DepthEnable = TRUE;
+    DepthStencilStateDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+    DepthStencilStateDesc.DepthFunc = D3D11_COMPARISON_LESS;
+
+    Microsoft::WRL::ComPtr<ID3D11DepthStencilState> DepthSterncilState;
+
+    D3DDevice->CreateDepthStencilState(&DepthStencilStateDesc, &DepthSterncilState);
+    D3DDeviceContext->OMSetDepthStencilState(DepthSterncilState.Get(), 1);
+
+    
+    //Creating a depthstencil view and setting it to the output merger
+    D3D11_TEXTURE2D_DESC  TextureDesc{};
+    Microsoft::WRL::ComPtr<ID3D11Texture2D> DepthStencilTexture;
+
+    TextureDesc.Width = windowApp->GetWindowWidth();
+    TextureDesc.Height = windowApp->GetWindowHeight();
+    TextureDesc.MipLevels = 1;
+    TextureDesc.ArraySize = 1;
+    TextureDesc.Format = DXGI_FORMAT_D32_FLOAT;
+    TextureDesc.SampleDesc.Count = 1;
+    TextureDesc.SampleDesc.Quality = 0;
+    TextureDesc.Usage = D3D11_USAGE_DEFAULT;
+    TextureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+    
+    D3DDevice->CreateTexture2D(&TextureDesc, nullptr, &DepthStencilTexture);
+
+
+    D3D11_DEPTH_STENCIL_VIEW_DESC DepthStencilViewDesc {};
+    DepthStencilViewDesc.Format = DXGI_FORMAT_D32_FLOAT;
+    DepthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+    DepthStencilViewDesc.Texture2D.MipSlice = 0;
+
+    D3DDevice->CreateDepthStencilView(DepthStencilTexture.Get(), &DepthStencilViewDesc, &DepthSentcilView);
+
+    D3DDeviceContext->OMSetRenderTargets(1, RenderTargetView.GetAddressOf(), DepthSentcilView.Get());
+
+ }
 
 
 
@@ -73,6 +115,8 @@ D3D11::D3D11(Window* windowApp)
 D3D11::~D3D11()
 {
     RenderTargetView->Release();
+    DepthSentcilView->Release();
+
     SwapChain->Release();
     D3DDevice->Release();
     D3DDeviceContext->Release();
@@ -83,9 +127,12 @@ void D3D11::ClearBuffer(float red, float green, float blue)
     float clour[] = { red,green,blue,1.0f };
 
     D3DDeviceContext->ClearRenderTargetView(RenderTargetView.Get(), clour);
+    D3DDeviceContext->ClearDepthStencilView(DepthSentcilView.Get(), D3D11_CLEAR_DEPTH, 1, 0);
+   
+    rotaion += 0.02;
+    DrawTriangle(rotaion,7);
+    DrawTriangle(rotaion, 15);
 
-
-    DrawTriangle();
 }
 
 
