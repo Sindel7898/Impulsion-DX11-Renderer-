@@ -104,7 +104,7 @@ public:
 
            cbData.transformation = {
 
-          DirectX::XMMatrixTranspose(
+                     DirectX::XMMatrixTranspose(
 
                       DirectX::XMMatrixRotationZ(angle)*
                       DirectX::XMMatrixRotationX(angle)*

@@ -16,6 +16,9 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{881a0205-2ee2-4488-a8ae-853d5ace6a1a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\BindableSystem">
+      <UniqueIdentifier>{f9a2b995-a62b-4c20-8215-5e3cb0841033}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp">
@@ -41,6 +44,24 @@
     <ClInclude Include="D3D11.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Bindable.h">
+      <Filter>Header Files\BindableSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="ConstantBuffer.h">
+      <Filter>Header Files\BindableSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="IndexBuffer.h">
+      <Filter>Header Files\BindableSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexBuffer.h">
+      <Filter>Header Files\BindableSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexShader.h">
+      <Filter>Header Files\BindableSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="PixelShader.h">
+      <Filter>Header Files\BindableSystem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="VertexShader.hlsl">
@@ -49,5 +70,8 @@
     <FxCompile Include="PixelShader.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>
