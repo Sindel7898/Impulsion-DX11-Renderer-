@@ -60,7 +60,7 @@ void Window::Run()
         
         Update();
 
-        TESTD3D->ClearBuffer(0.0f, 0.0f, 1.0f);
+        TESTD3D->ClearBuffer(1.0f, 1.0f, 1.0f);
         TESTD3D->EndFrame();
 
         Render();

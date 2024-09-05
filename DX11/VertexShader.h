@@ -3,18 +3,20 @@
 #include "Bindable.h"
 #include <d3dcompiler.h>
 #include <string>
+#include "PixelShader.h"
 
+class PixelShader;
 
 class VertexShader : public Bindable {
 public:
 
-    VertexShader(ID3D11Device* device, const std::wstring& ShaderName, Microsoft::WRL::ComPtr<ID3DBlob> SharedShderBlob) {
+    VertexShader(ID3D11Device* device, LPCWSTR ShaderName, PixelShader* PixelShader) {
 
-        Microsoft::WRL::ComPtr<ID3DBlob>    ErrorBlob = nullptr;
+        Microsoft::WRL::ComPtr<ID3DBlob> ErrorBlob = nullptr;
 
-        D3DCompileFromFile(L"ShaderName", nullptr, nullptr,"main", "vs_5_0",0, 0,&SharedShderBlob,&ErrorBlob);
+        CHECK_HRESULT(D3DCompileFromFile(ShaderName, nullptr, nullptr,"main", "vs_5_0",0, 0,&PixelShader->SharedShaderBlob,&ErrorBlob));
   
-        device->CreateVertexShader(SharedShderBlob->GetBufferPointer(), SharedShderBlob->GetBufferSize(), NULL, &pVertexShader);
+        CHECK_HRESULT( device->CreateVertexShader(PixelShader->SharedShaderBlob->GetBufferPointer(), PixelShader->SharedShaderBlob->GetBufferSize(), NULL, &pVertexShader));
 
     }
 
@@ -25,5 +27,6 @@ public:
     }
 
 private:
+
     Microsoft::WRL::ComPtr<ID3D11VertexShader> pVertexShader;
 };

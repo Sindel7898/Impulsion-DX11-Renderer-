@@ -3,35 +3,30 @@
 
 
 class VertexBuffer : public Bindable {
+public :
+	VertexBuffer(ID3D11Device* Device, std::vector<float> VertexData) {
 
-	VertexBuffer(float VertexData, ID3D11Device * Device) {
 
+        D3D11_BUFFER_DESC VertexBufferDesc = {}; 
+        VertexBufferDesc.ByteWidth = static_cast<UINT>( sizeof(float) * VertexData.size());
 
-        D3D11_BUFFER_DESC TriangleBufferData = {}; 
-        TriangleBufferData.ByteWidth = sizeof(VertexData);
-        TriangleBufferData.Usage = D3D11_USAGE_DEFAULT;
-        TriangleBufferData.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-        TriangleBufferData.CPUAccessFlags = 0;
-        TriangleBufferData.MiscFlags = 0;
+        VertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+        VertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+        VertexBufferDesc.CPUAccessFlags = 0;
+        VertexBufferDesc.MiscFlags = 0;
 
-        /// Keep an EYE on this
-        TriangleBufferData.StructureByteStride = sizeof(VertexData);
+        D3D11_SUBRESOURCE_DATA VertexBufferSubSurfaceData = {};
+        VertexBufferSubSurfaceData.pSysMem = VertexData.data();
 
-        D3D11_SUBRESOURCE_DATA TriangleSubSurfaceData = {};
-        TriangleSubSurfaceData.pSysMem = &VertexData;
 
         //Create Vertex Buffer
-        Device->CreateBuffer(&TriangleBufferData, &TriangleSubSurfaceData, &vVertexBuffer);
-
-
-
+        CHECK_HRESULT(Device->CreateBuffer(&VertexBufferDesc, &VertexBufferSubSurfaceData, &vVertexBuffer));
 
 	}
 
 	void Bind(ID3D11DeviceContext* context) override{
 
-        /// Keep an EYE on this
-        UINT Stride = sizeof(float)*3;
+        UINT Stride = sizeof(float) * 3;
         UINT Offset = 0;
 
         context->IASetVertexBuffers(0, 1, vVertexBuffer.GetAddressOf(), &Stride, &Offset);

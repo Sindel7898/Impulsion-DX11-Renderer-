@@ -19,6 +19,9 @@
     <Filter Include="Header Files\BindableSystem">
       <UniqueIdentifier>{f9a2b995-a62b-4c20-8215-5e3cb0841033}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Drawable System">
+      <UniqueIdentifier>{6240bb74-51db-4240-af25-1e421718a5aa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp">
@@ -31,6 +34,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="D3D11.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Drawable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TriangleDrawable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -61,6 +70,18 @@
     </ClInclude>
     <ClInclude Include="PixelShader.h">
       <Filter>Header Files\BindableSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="InputLayout.h">
+      <Filter>Header Files\BindableSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Drawable.h">
+      <Filter>Header Files\Drawable System</Filter>
+    </ClInclude>
+    <ClInclude Include="TriangleDrawable.h">
+      <Filter>Header Files\Drawable System</Filter>
+    </ClInclude>
+    <ClInclude Include="MACROS.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,30 +1,34 @@
 #pragma once
 #include"Bindable.h"
+#include <iostream>
+using namespace std;
+
+
+class TriangleDrawable;
 
 class IndexBuffer : public Bindable {
-
-	IndexBuffer(ID3D11Device* device , unsigned short Indices[] , float Vertex) {
-
+public:
+	IndexBuffer(ID3D11Device* device , std::vector<int> CubeIndex) {
 
 
         D3D11_BUFFER_DESC IndexBufferDesc = {};
-        IndexBufferDesc.ByteWidth = sizeof(Indices);
+        IndexBufferDesc.ByteWidth = static_cast<UINT>(sizeof(int) * CubeIndex.size());
         IndexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
         IndexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
         IndexBufferDesc.CPUAccessFlags = 0;
         IndexBufferDesc.MiscFlags = 0;
-        IndexBufferDesc.StructureByteStride = sizeof(Vertex);
 
         D3D11_SUBRESOURCE_DATA INDEXsURF = {};
-        INDEXsURF.pSysMem = Indices;
+        INDEXsURF.pSysMem = CubeIndex.data();
 
-        device->CreateBuffer(&IndexBufferDesc, &INDEXsURF, &iIndexBuffer);
+        CHECK_HRESULT(device->CreateBuffer(&IndexBufferDesc, &INDEXsURF, &iIndexBuffer));
 
+       
 	}
 
 	virtual void Bind(ID3D11DeviceContext* context) override {
 
-        context->IASetIndexBuffer(iIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0);
+        context->IASetIndexBuffer(iIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
     }
 	
 private:

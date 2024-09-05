@@ -1,5 +1,10 @@
-float4 main(float3 color :COLOR) : SV_TARGET
+cbuffer ConsBuffer
 {
-    return float4(color, 1.0f);
+    float3 facecolor[6];
+}
+
+float4 main(uint tid : SV_PrimitiveID) : SV_TARGET
+{
+    return float4(facecolor[tid / 2], 1);
 
 }

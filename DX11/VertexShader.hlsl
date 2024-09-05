@@ -1,24 +1,16 @@
 
-struct Data
-{
-    float3 Color : COLOR;
-    float4 Pos : SV_Position;
-    
-};
-
 cbuffer Cbuf
 {
-     matrix transform;
+    matrix transform;
 };
 
-Data main(float3 pos : POSITION, float3 color : COLOR)
+
+
+
+
+float4 main(float3 Pos : POSITION) : SV_Position
 {
     
-    Data output;
-    
-    output.Pos = mul(float4(pos, 1.0f),transform);
-    output.Color = color;
-    
-    return output;
+    return mul(float4(Pos, 1.0f), transform);
 
 }

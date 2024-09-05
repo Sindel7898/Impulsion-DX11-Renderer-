@@ -1,5 +1,5 @@
 #include "D3D11.h"
-
+#include "MACROS.h"
 
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "dxgi.lib")
@@ -8,8 +8,8 @@
 #pragma comment(lib, "dxguid.lib")
 
 
-D3D11::D3D11(Window* windowApp)
-{
+D3D11::D3D11(Window* windowApp){
+    
     windowContextHolder = windowApp;
     
     //CREATING DEVICE AND SWAPCHAIN  /////////////////////////////////////////////////////////
@@ -45,7 +45,7 @@ D3D11::D3D11(Window* windowApp)
     SwapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
     SwapChainDesc.Flags = 0;
 
-      D3D11CreateDeviceAndSwapChain(
+    CHECK_HRESULT(D3D11CreateDeviceAndSwapChain(
         nullptr,
         D3D_DRIVER_TYPE::D3D_DRIVER_TYPE_HARDWARE,
         nullptr,
@@ -57,27 +57,27 @@ D3D11::D3D11(Window* windowApp)
         &SwapChain, 
         &D3DDevice,
         nullptr,
-        &D3DDeviceContext);
+        &D3DDeviceContext));
 
    
     //GET BackBuffer and Create a render TargetView to add color to the buffer
 
-     SwapChain->GetBuffer(0, __uuidof(ID3D11Resource),&Buffer);
+    CHECK_HRESULT(SwapChain->GetBuffer(0, __uuidof(ID3D11Resource), &Buffer));
 
-    D3DDevice->CreateRenderTargetView(Buffer.Get(), nullptr, &RenderTargetView);
+    CHECK_HRESULT(D3DDevice->CreateRenderTargetView(Buffer.Get(), nullptr, &RenderTargetView));
 
 
 
     //// Creating a depth stencil state and setting it to the OUT PUT MERGER //////////////////////////////////////////////////// 
    
-    D3D11_DEPTH_STENCIL_DESC DepthStencilStateDesc;
+    D3D11_DEPTH_STENCIL_DESC DepthStencilStateDesc{};
     DepthStencilStateDesc.DepthEnable = TRUE;
     DepthStencilStateDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
     DepthStencilStateDesc.DepthFunc = D3D11_COMPARISON_LESS;
 
     Microsoft::WRL::ComPtr<ID3D11DepthStencilState> DepthSterncilState;
 
-    D3DDevice->CreateDepthStencilState(&DepthStencilStateDesc, &DepthSterncilState);
+    CHECK_HRESULT(D3DDevice->CreateDepthStencilState(&DepthStencilStateDesc, &DepthSterncilState));
     D3DDeviceContext->OMSetDepthStencilState(DepthSterncilState.Get(), 1);
 
     
@@ -95,7 +95,7 @@ D3D11::D3D11(Window* windowApp)
     TextureDesc.Usage = D3D11_USAGE_DEFAULT;
     TextureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
     
-    D3DDevice->CreateTexture2D(&TextureDesc, nullptr, &DepthStencilTexture);
+    CHECK_HRESULT(D3DDevice->CreateTexture2D(&TextureDesc, nullptr, &DepthStencilTexture));
 
 
     D3D11_DEPTH_STENCIL_VIEW_DESC DepthStencilViewDesc {};
@@ -103,11 +103,16 @@ D3D11::D3D11(Window* windowApp)
     DepthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
     DepthStencilViewDesc.Texture2D.MipSlice = 0;
 
-    D3DDevice->CreateDepthStencilView(DepthStencilTexture.Get(), &DepthStencilViewDesc, &DepthSentcilView);
+    CHECK_HRESULT(D3DDevice->CreateDepthStencilView(DepthStencilTexture.Get(), &DepthStencilViewDesc, &DepthSentcilView));
 
     D3DDeviceContext->OMSetRenderTargets(1, RenderTargetView.GetAddressOf(), DepthSentcilView.Get());
 
- }
+    Cube = std::make_shared<TriangleDrawable>(D3DDevice.Get(),windowContextHolder);
+    Cube2 = std::make_shared<TriangleDrawable>(D3DDevice.Get(), windowContextHolder);
+    Cube3 = std::make_shared<TriangleDrawable>(D3DDevice.Get(), windowContextHolder);
+    Cube4 = std::make_shared<TriangleDrawable>(D3DDevice.Get(), windowContextHolder);
+
+    }
 
 
 
@@ -130,10 +135,14 @@ void D3D11::ClearBuffer(float red, float green, float blue)
     D3DDeviceContext->ClearDepthStencilView(DepthSentcilView.Get(), D3D11_CLEAR_DEPTH, 1, 0);
    
     rotaion += 0.02;
-    DrawTriangle(rotaion,7);
-    DrawTriangle(rotaion, 15);
 
-}
+    Cube->Draw(D3DDeviceContext.Get(), D3DDevice.Get(), windowContextHolder, rotaion, 0, 0, 10);
+    Cube2->Draw(D3DDeviceContext.Get(), D3DDevice.Get(), windowContextHolder, rotaion, 6.4, 9, 15);
+    Cube3->Draw(D3DDeviceContext.Get(), D3DDevice.Get(), windowContextHolder, rotaion, -4.2, -6, 12);
+    Cube4->Draw(D3DDeviceContext.Get(), D3DDevice.Get(), windowContextHolder, rotaion, 2.6, 4, 14);
+
+    
+ }
 
 
 void D3D11::EndFrame()
