@@ -1,5 +1,4 @@
-// TriangleDrawable.cpp
-#include "TriangleDrawable.h"
+#include "CubeDrawable.h"
 
 
 Window* windowContextHolderHolder;
@@ -21,7 +20,7 @@ std::vector<int> CubeIndex = {
 
 
 
-TriangleDrawable::TriangleDrawable(ID3D11Device* device, ID3D11DeviceContext* D3DDeviceContext, Window* windowContextHolder, float locationX, float locationY, float locationZ) 
+CubeDrawable::CubeDrawable(ID3D11Device* device, ID3D11DeviceContext* D3DDeviceContext, Window* windowContextHolder, float locationX, float locationY, float locationZ)
     : LocationX(locationX), LocationY(locationY), LocationZ(locationZ)
 {
  
@@ -124,7 +123,7 @@ TriangleDrawable::TriangleDrawable(ID3D11Device* device, ID3D11DeviceContext* D3
 
 
 // stuff to be updated every frame
-void TriangleDrawable::Update(ID3D11DeviceContext* context, ID3D11Device* device, Window* windowApp, float updateRotation)
+void CubeDrawable::Update(ID3D11DeviceContext* context, ID3D11Device* device, Window* windowApp, float updateRotation)
 {
     std::vector<DirectX::XMMATRIX> CubeTransformations = {
 
@@ -145,7 +144,7 @@ void TriangleDrawable::Update(ID3D11DeviceContext* context, ID3D11Device* device
 
 }
 
-void TriangleDrawable::Draw(ID3D11DeviceContext* context, ID3D11Device* device, Window* windowApp)  {
+void CubeDrawable::Draw(ID3D11DeviceContext* context, ID3D11Device* device, Window* windowApp)  {
 
     Bind(context);//Bind all the bindables to the object 
 

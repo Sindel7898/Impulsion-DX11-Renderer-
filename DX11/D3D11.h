@@ -12,7 +12,7 @@
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW/glfw3native.h>
 #include <DirectXMath.h>
-#include "TriangleDrawable.h"
+#include "CubeDrawable.h"
 
 class D3D11
 {
@@ -48,7 +48,7 @@ private:
     Microsoft::WRL::ComPtr<ID3D11RenderTargetView> RenderTargetView ;
     Microsoft::WRL::ComPtr<ID3D11DepthStencilView> DepthSentcilView;
 
-    std::vector<std::shared_ptr<TriangleDrawable>> Cube;
+    std::vector<std::shared_ptr<CubeDrawable>> Cube;
 
 
 

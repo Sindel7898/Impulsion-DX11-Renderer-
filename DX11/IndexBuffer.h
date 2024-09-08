@@ -4,7 +4,6 @@
 using namespace std;
 
 
-class TriangleDrawable;
 
 class IndexBuffer : public Bindable {
 public:

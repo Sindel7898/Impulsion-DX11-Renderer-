@@ -124,7 +124,7 @@ D3D11::D3D11(Window* windowApp){
             float x = (i % 5) * spacing - (spacing * 2); // Spread cubes along X
             float y = ((i / 5) % 10) * spacing - (spacing * 2); // Spread cubes along Y
 
-            Cube.push_back(std::make_shared<TriangleDrawable>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, x, y, 20.0f)); // Adjust parameters as needed
+            Cube.push_back(std::make_shared<CubeDrawable>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, x, y, 20.0f)); // Adjust parameters as needed
 
         }
     

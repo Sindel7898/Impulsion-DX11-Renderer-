@@ -13,10 +13,10 @@
 #include "ConstantBuffer.h"
 #include <WICTextureLoader.h>
 
-class TriangleDrawable : public Drawable {
+class CubeDrawable : public Drawable {
 
 public:
-    TriangleDrawable(ID3D11Device* device, ID3D11DeviceContext* D3DDeviceContext, Window* windowContextHolder, float locationX,float locationY,float locationZ);
+    CubeDrawable(ID3D11Device* device, ID3D11DeviceContext* D3DDeviceContext, Window* windowContextHolder, float locationX,float locationY,float locationZ);
 
     virtual void Draw(ID3D11DeviceContext* context, ID3D11Device* device , Window* windowApp) override;
     virtual void Update(ID3D11DeviceContext* context, ID3D11Device* device, Window* windowApp, float updateRotation);

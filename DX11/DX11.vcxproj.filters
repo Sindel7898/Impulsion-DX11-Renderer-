@@ -39,7 +39,7 @@
     <ClCompile Include="Drawable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TriangleDrawable.cpp">
+    <ClCompile Include="CubeDrawable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -77,7 +77,7 @@
     <ClInclude Include="Drawable.h">
       <Filter>Header Files\Drawable System</Filter>
     </ClInclude>
-    <ClInclude Include="TriangleDrawable.h">
+    <ClInclude Include="CubeDrawable.h">
       <Filter>Header Files\Drawable System</Filter>
     </ClInclude>
     <ClInclude Include="MACROS.h">
