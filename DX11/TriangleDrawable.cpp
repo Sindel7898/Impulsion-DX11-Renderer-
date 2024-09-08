@@ -1,13 +1,12 @@
 // TriangleDrawable.cpp
 #include "TriangleDrawable.h"
 
-float UpdateAngle = 0;
-float UpdateZ = 0;
+
 Window* windowContextHolderHolder;
 
 std::vector<int> CubeIndex = {
      
-    0, 2, 1, 2, 3, 1,
+     0, 2, 1, 2, 3, 1,
      // Back face
      1, 3, 5, 3, 7, 5,
      // Top face
@@ -22,99 +21,133 @@ std::vector<int> CubeIndex = {
 
 
 
-TriangleDrawable::TriangleDrawable(ID3D11Device* device, Window* windowContextHolder) {
+TriangleDrawable::TriangleDrawable(ID3D11Device* device, ID3D11DeviceContext* D3DDeviceContext, Window* windowContextHolder, float locationX, float locationY, float locationZ) 
+    : LocationX(locationX), LocationY(locationY), LocationZ(locationZ)
+{
  
    
     windowContextHolderHolder = windowContextHolder;
+   
+    //Vertex Data Containing informatoin for vertex positions and texture coords
+    struct Vertex {
+        DirectX::XMFLOAT3 position;   // Vertex position
+        DirectX::XMFLOAT2 texCoord;   // Texture coordinates (U, V)
+    };
 
-     std::vector<float> CubeData = {
 
-         -1.0f, -1.0f, -1.0f, // Bottom-left, red
-          1.0f, -1.0f,  -1.0f,    // Bottom-right, green
-         -1.0f,  1.0f,  -1.0f,    // Top-right, blue
-          1.0f,  1.0f,  -1.0f,   // Top-left, yellow
+     std::vector<Vertex> CubeData = {
 
-          // Back face
-          -1.0f, -1.0f, 1.0f,      // Bottom-left, red
-           1.0f, -1.0f, 1.0f,    // Bottom-right, green
-          -1.0f, 1.0f, 1.0f,      // Top-right, blue
-           1.0f,  1.0f, 1.0f,      // Top-left, yellow
+            { DirectX::XMFLOAT3(-1.0f, -1.0f, -1.0f), DirectX::XMFLOAT2(0.0f, 1.0f) },  // Bottom-left
+            { DirectX::XMFLOAT3(1.0f, -1.0f, -1.0f), DirectX::XMFLOAT2(1.0f, 1.0f) },  // Bottom-right
+            { DirectX::XMFLOAT3(-1.0f,  1.0f, -1.0f), DirectX::XMFLOAT2(0.0f, 0.0f) },  // Top-left
+            { DirectX::XMFLOAT3(1.0f,  1.0f, -1.0f), DirectX::XMFLOAT2(1.0f, 0.0f) },  // Top-right
 
+            { DirectX::XMFLOAT3(-1.0f, -1.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 1.0f) },   // Bottom-right
+            { DirectX::XMFLOAT3(1.0f, -1.0f, 1.0f), DirectX::XMFLOAT2(0.0f, 1.0f) },   // Bottom-left
+            { DirectX::XMFLOAT3(-1.0f,  1.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 0.0f) },   // Top-right
+            { DirectX::XMFLOAT3(1.0f,  1.0f, 1.0f), DirectX::XMFLOAT2(0.0f, 0.0f) },   // Top-left
      };
 
-     auto vertexBuffer =  std::make_shared<VertexBuffer>(device, CubeData);
-    AddBindable(vertexBuffer);
 
-
- 
-
-   std::vector< DirectX::XMFLOAT4> CubeColors = {
-
-     DirectX::XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f), // Bottom-left, red
-     DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f), // Bottom-right, green
-     DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f), // Top-right, blue
-     DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f), // Top-left, yellow
-     DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f), // Bottom-left, red
-     DirectX::XMFLOAT4(0.0f, 1.0f, 1.0f, 1.0f)  // Bottom-right, green
-
+     auto vertexBuffer =  std::make_shared<VertexBuffer<Vertex>>(device, CubeData);
+     AddBindable(vertexBuffer);
+     ///////////////////////////////////////////////////////////////////////////////////////////
+    
+  //INITIALMATIXDATA////////////////////////////////////////////////////////////////////////////
+   
+     std::vector<DirectX::XMMATRIX> initialTransformations = {
+      DirectX::XMMatrixIdentity()  // Set to identity matrix initially
    };
 
-   auto coolorconstantBuffer = std::make_shared<ConstantBuffer<DirectX::XMFLOAT4>>(device, CubeColors,"Pixel");
-   AddBindable(coolorconstantBuffer);
 
+   transformationConstantBuffer = std::make_shared<ConstantBuffer<DirectX::XMMATRIX>>(device, initialTransformations, "Vertex");
+   AddBindable(transformationConstantBuffer);
+   //////////////////////////////////////////////////////////////////////////////////////////////
+  
+   ////Create texture and send data to the pixel shader ////////////////////////////////////////
+   
+   Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> ShaderResourceView = nullptr;   
+   CHECK_HRESULT(DirectX::CreateWICTextureFromFile(device, D3DDeviceContext, L"C:\\Users\\Amir sanni\\source\\repos\\DX11\\LearnDX\\Textures\\wood.jpg", nullptr, ShaderResourceView.GetAddressOf()));
+   D3DDeviceContext->PSSetShaderResources(0, 1, ShaderResourceView.GetAddressOf());
 
- 
+   ////////////////////////////////////////////////////////////////////////////////////////////
+  
+   ///Image sampler info//////////////////////////////////////////////////////////////////////
+   D3D11_SAMPLER_DESC sampDesc = {};
+   sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+   sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+   sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+   sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+   sampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+   sampDesc.MinLOD = 0;
+   sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+   Microsoft::WRL::ComPtr<ID3D11SamplerState> samplerState = nullptr;
+
+   device->CreateSamplerState(&sampDesc, &samplerState);
+   D3DDeviceContext->PSSetSamplers(0, 1, samplerState.GetAddressOf());
+   //Send Sampler to the pixel shader///////////////////////////////////////////////////////
+
+   /// Create index Buffer/////////////////////////////////////////////////////////////////
+
    auto indexBuffer = std::make_shared<IndexBuffer>(device, CubeIndex);
    AddBindable(indexBuffer);
 
-   
+   ////////////////////////////////////////////////////////////////////
+
+   ////Create pixel and vertex shaders//////////////////////////////////////////////////////
    auto pixelShader = std::make_shared<PixelShader>(device, L"PixelShader.hlsl");
    AddBindable(pixelShader);
 
 
    auto vertexShader = std::make_shared<VertexShader>(device, L"VertexShader.hlsl", pixelShader.get() );
    AddBindable(vertexShader);
+   ///////////////////////////////////////////////////////////////////////////////////////////
 
 
-
+   ///INPUT LAYOUT/////////////////////////////////////////////////////////////////////////////
    D3D11_INPUT_ELEMENT_DESC ied[]{
 
           {"POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0},
+          {"TEXCOORD",0,DXGI_FORMAT_R32G32B32_FLOAT,0,12,D3D11_INPUT_PER_VERTEX_DATA,0},
+
    };
 
    auto inputLayout = std::make_shared<InputLayout>(device, ied, std::size(ied), pixelShader.get());
    AddBindable(inputLayout);
 
+   ////////////////////////////////////////////////////////////////////////////////////////////////////
+   
    
 
 }
 
 
-
-
-
-void TriangleDrawable::Draw(ID3D11DeviceContext* context, ID3D11Device* device, Window* windowApp, float updateRotation, float UpdateXp, float UpdateYp ,float UpdateZp)  {
-
-
+// stuff to be updated every frame
+void TriangleDrawable::Update(ID3D11DeviceContext* context, ID3D11Device* device, Window* windowApp, float updateRotation)
+{
     std::vector<DirectX::XMMATRIX> CubeTransformations = {
 
         DirectX::XMMatrixTranspose(
 
-                DirectX::XMMatrixScaling(1.7f, 1.7f, 1.7f) *
-                DirectX::XMMatrixRotationZ(UpdateAngle) *
-                DirectX::XMMatrixRotationX(UpdateAngle) *
+                DirectX::XMMatrixScaling(0.3f, 0.3f, 0.3f) *
+                DirectX::XMMatrixRotationZ(updateRotation) *
+                DirectX::XMMatrixRotationX(updateRotation) *
 
-                DirectX::XMMatrixTranslation(UpdateXp, UpdateYp, UpdateZp) *
-                DirectX::XMMatrixPerspectiveLH(DirectX::XMConvertToRadians(45.0f), windowContextHolderHolder->GetWindowWidth() / windowContextHolderHolder->GetWindowHeight(), 0.5f, 100.0f))
+                DirectX::XMMatrixTranslation(LocationX, LocationY, LocationZ) *
+
+                DirectX::XMMatrixPerspectiveLH(DirectX::XMConvertToRadians(45), windowContextHolderHolder->GetWindowWidth() / windowContextHolderHolder->GetWindowHeight(), 1.0f, 200.0f))
 
     };
 
+    //update constant buffer data || LOOK A BIT MORE INTO THIS||
+    transformationConstantBuffer->Update(context, CubeTransformations);
 
-    auto constantBuffer = std::make_shared<ConstantBuffer<DirectX::XMMATRIX>>(device, CubeTransformations, "Vertex");
-    AddBindable(constantBuffer);
+}
 
+void TriangleDrawable::Draw(ID3D11DeviceContext* context, ID3D11Device* device, Window* windowApp)  {
 
-    Bind(context);
+    Bind(context);//Bind all the bindables to the object 
 
     context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
@@ -131,7 +164,8 @@ void TriangleDrawable::Draw(ID3D11DeviceContext* context, ID3D11Device* device, 
 
     UINT indexCount = static_cast<UINT>(CubeIndex.size());
 
-    UpdateAngle = updateRotation;
-    UpdateZ = UpdateZp;
-     context->DrawIndexed(indexCount, 0, 0);
+    context->DrawIndexed(indexCount, 0, 0);
+
 }
+
+

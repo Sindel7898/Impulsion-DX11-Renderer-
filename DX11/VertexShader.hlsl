@@ -1,16 +1,24 @@
+struct VS_OUTPUT
+{
+    float4 Position : SV_Position;
+    float2 texCoord : TEXCOORD0;
 
-cbuffer Cbuf
+};
+
+cbuffer Cbuf : register(b0)
 {
     matrix transform;
 };
 
 
 
-
-
-float4 main(float3 Pos : POSITION) : SV_Position
+VS_OUTPUT VSMain(float3 Pos : POSITION, float2 Texture : TEXCOORD)
 {
+    VS_OUTPUT output;
     
-    return mul(float4(Pos, 1.0f), transform);
+    output.Position = mul(float4(Pos, 1.0f), transform);
+    output.texCoord = Texture;
+   
+    return output;
 
 }

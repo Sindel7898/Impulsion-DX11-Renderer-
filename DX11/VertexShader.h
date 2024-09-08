@@ -14,7 +14,7 @@ public:
 
         Microsoft::WRL::ComPtr<ID3DBlob> ErrorBlob = nullptr;
 
-        CHECK_HRESULT(D3DCompileFromFile(ShaderName, nullptr, nullptr,"main", "vs_5_0",0, 0,&PixelShader->SharedShaderBlob,&ErrorBlob));
+        CHECK_HRESULT(D3DCompileFromFile(ShaderName, nullptr, nullptr,"VSMain", "vs_5_0",0, 0,&PixelShader->SharedShaderBlob,&ErrorBlob));
   
         CHECK_HRESULT( device->CreateVertexShader(PixelShader->SharedShaderBlob->GetBufferPointer(), PixelShader->SharedShaderBlob->GetBufferSize(), NULL, &pVertexShader));
 

@@ -13,7 +13,7 @@ public:
 
         Microsoft::WRL::ComPtr<ID3DBlob> ErrorBlob = nullptr;
 
-        CHECK_HRESULT(D3DCompileFromFile(ShaderName, nullptr, nullptr, "main", "ps_5_0", 0, 0, &SharedShaderBlob, &ErrorBlob));
+        CHECK_HRESULT(D3DCompileFromFile(ShaderName, nullptr, nullptr, "PSMain", "ps_5_0", 0, 0, &SharedShaderBlob, &ErrorBlob));
 
         CHECK_HRESULT(device->CreatePixelShader(SharedShaderBlob->GetBufferPointer(), SharedShaderBlob->GetBufferSize(), NULL, &pPixelShader));
 

@@ -107,15 +107,47 @@ D3D11::D3D11(Window* windowApp){
 
     D3DDeviceContext->OMSetRenderTargets(1, RenderTargetView.GetAddressOf(), DepthSentcilView.Get());
 
-    Cube = std::make_shared<TriangleDrawable>(D3DDevice.Get(),windowContextHolder);
-    Cube2 = std::make_shared<TriangleDrawable>(D3DDevice.Get(), windowContextHolder);
-    Cube3 = std::make_shared<TriangleDrawable>(D3DDevice.Get(), windowContextHolder);
-    Cube4 = std::make_shared<TriangleDrawable>(D3DDevice.Get(), windowContextHolder);
+    load();
 
     }
 
+    void D3D11::load() {
 
+      
 
+        float spacing = 2.0f;
+        
+        for (int i = 0; i < 20; i++) {
+
+            std::srand(static_cast<unsigned>(std::time(0)));
+
+            float x = (i % 5) * spacing - (spacing * 2); // Spread cubes along X
+            float y = ((i / 5) % 10) * spacing - (spacing * 2); // Spread cubes along Y
+
+            Cube.push_back(std::make_shared<TriangleDrawable>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, x, y, 20.0f)); // Adjust parameters as needed
+
+        }
+    
+        int visibleCubeCount = Cube.size();
+        std::cout << "Total number of cubes on screen: " << visibleCubeCount << std::endl;
+
+    }
+
+    void D3D11::Update() {
+
+        ClearBuffer(0, 0, 0);
+        rotaion += 0.02;
+
+        for (int i = 0; i < Cube.size(); i++) {
+
+            Cube[i]->Update(D3DDeviceContext.Get(), D3DDevice.Get(), windowContextHolder, rotaion);
+
+            Cube[i]->Draw(D3DDeviceContext.Get(), D3DDevice.Get(), windowContextHolder);
+
+            
+        }
+
+    }
 
 D3D11::~D3D11()
 {
@@ -133,14 +165,6 @@ void D3D11::ClearBuffer(float red, float green, float blue)
 
     D3DDeviceContext->ClearRenderTargetView(RenderTargetView.Get(), clour);
     D3DDeviceContext->ClearDepthStencilView(DepthSentcilView.Get(), D3D11_CLEAR_DEPTH, 1, 0);
-   
-    rotaion += 0.02;
-
-    Cube->Draw(D3DDeviceContext.Get(), D3DDevice.Get(), windowContextHolder, rotaion, 0, 0, 10);
-    Cube2->Draw(D3DDeviceContext.Get(), D3DDevice.Get(), windowContextHolder, rotaion, 6.4, 9, 15);
-    Cube3->Draw(D3DDeviceContext.Get(), D3DDevice.Get(), windowContextHolder, rotaion, -4.2, -6, 12);
-    Cube4->Draw(D3DDeviceContext.Get(), D3DDevice.Get(), windowContextHolder, rotaion, 2.6, 4, 14);
-
     
  }
 

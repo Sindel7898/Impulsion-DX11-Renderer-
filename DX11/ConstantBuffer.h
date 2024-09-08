@@ -1,6 +1,7 @@
 #pragma once
 #include"Bindable.h"
 #include "string"
+
 template<typename T>
 
 class ConstantBuffer : public Bindable {
@@ -37,7 +38,24 @@ public:
         }
 
     }
+    
+    virtual void Update(ID3D11DeviceContext* context, const std::vector<T>& data)  {
 
+        if (cConstantBuffer != nullptr) {
+            
+            D3D11_MAPPED_SUBRESOURCE mappedResource{};
+
+           
+
+            context->Map(cConstantBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+        
+            memcpy(mappedResource.pData, data.data(), sizeof(T) * data.size());
+
+            context->Unmap(cConstantBuffer.Get(), 0);
+        }
+
+
+    }
 private:
 
     string HoldShaderToBindText;

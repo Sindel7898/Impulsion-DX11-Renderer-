@@ -20,6 +20,8 @@ class D3D11
 public:
 
     D3D11(Window* windowApp);
+    void load();
+    void Update();
     ~D3D11();
 
     void ClearBuffer(float red, float green, float blue);
@@ -46,10 +48,8 @@ private:
     Microsoft::WRL::ComPtr<ID3D11RenderTargetView> RenderTargetView ;
     Microsoft::WRL::ComPtr<ID3D11DepthStencilView> DepthSentcilView;
 
-    std::shared_ptr<TriangleDrawable> Cube;
-    std::shared_ptr<TriangleDrawable> Cube2;
-    std::shared_ptr<TriangleDrawable> Cube3;
-    std::shared_ptr<TriangleDrawable> Cube4;
+    std::vector<std::shared_ptr<TriangleDrawable>> Cube;
+
 
 
 };

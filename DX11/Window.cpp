@@ -48,22 +48,18 @@ void Window::Run()
     {
         return;
     }
-
-    if (!Load())
-    {
-        return;
-    }
+    
+       
+    
 
     while (!glfwWindowShouldClose(_window))
     {
         glfwPollEvents();
         
-        Update();
 
-        TESTD3D->ClearBuffer(1.0f, 1.0f, 1.0f);
+        TESTD3D->Update();
         TESTD3D->EndFrame();
 
-        Render();
     }
 }
 
