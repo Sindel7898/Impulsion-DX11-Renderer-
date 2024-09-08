@@ -133,9 +133,29 @@ D3D11::D3D11(Window* windowApp){
 
     }
 
+     float clearColor[3] = { 0.1f, 0.1f, 0.1f};
+
     void D3D11::Update() {
 
-        ClearBuffer(0, 0, 0);
+        ImGui_ImplDX11_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+
+
+        ImGui::Begin("Hello, ImGui!");
+        ImGui::Text("This is a window with DirectX 11 and GLFW.");
+        ImGui::End();
+
+        ImGui::Begin("Background Color Picker");
+        ImGui::ColorEdit3("Background Color", clearColor);  
+        ImGui::End();
+
+
+        ClearBuffer(clearColor[1], clearColor[2], clearColor[3]);
+
+       
+
+       
         rotaion += 0.02;
 
         for (int i = 0; i < Cube.size(); i++) {
@@ -147,6 +167,9 @@ D3D11::D3D11(Window* windowApp){
             
         }
 
+
+        ImGui::Render();
+        ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
     }
 
 D3D11::~D3D11()

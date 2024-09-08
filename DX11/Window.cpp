@@ -36,7 +36,13 @@ bool Window::Initialize()
 
     TESTD3D  = new D3D11(this);
 
-    
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    ImGui::StyleColorsDark();
+
+    ImGui_ImplGlfw_InitForOther(_window, true);
+    ImGui_ImplDX11_Init(TESTD3D->GetDevice(), TESTD3D->GetDeviceContext());
     return true;
 }
 
@@ -56,7 +62,7 @@ void Window::Run()
     {
         glfwPollEvents();
         
-
+       
         TESTD3D->Update();
         TESTD3D->EndFrame();
 

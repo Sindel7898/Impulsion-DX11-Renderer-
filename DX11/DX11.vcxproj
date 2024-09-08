@@ -71,6 +71,12 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>C:\Users\Amir sanni\source\repos\DX11\LearnDX\packages\imgui;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>C:\Users\Amir sanni\source\repos\DX11\LearnDX\packages\imgui;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -105,7 +111,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\Amir sanni\Documents\C++ Libaries\glfw-3.4.bin.WIN64\glfw-3.4.bin.WIN64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Amir sanni\source\repos\DX11\LearnDX\packages\imgui;C:\Users\Amir sanni\Documents\C++ Libaries\glfw-3.4.bin.WIN64\glfw-3.4.bin.WIN64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -122,7 +128,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\Amir sanni\Documents\C++ Libaries\glfw-3.4.bin.WIN64\glfw-3.4.bin.WIN64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Amir sanni\source\repos\DX11\LearnDX\packages\imgui;C:\Users\Amir sanni\Documents\C++ Libaries\glfw-3.4.bin.WIN64\glfw-3.4.bin.WIN64\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -134,6 +140,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\packages\imgui\imgui.cpp" />
+    <ClCompile Include="..\packages\imgui\imgui_demo.cpp" />
+    <ClCompile Include="..\packages\imgui\imgui_draw.cpp" />
+    <ClCompile Include="..\packages\imgui\imgui_impl_dx11.cpp" />
+    <ClCompile Include="..\packages\imgui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="..\packages\imgui\imgui_impl_win32.cpp" />
+    <ClCompile Include="..\packages\imgui\imgui_tables.cpp" />
+    <ClCompile Include="..\packages\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Drawable.cpp" />
     <ClCompile Include="CubeDrawable.cpp" />
     <ClCompile Include="Window.cpp" />
@@ -142,6 +156,15 @@
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\packages\imgui\imconfig.h" />
+    <ClInclude Include="..\packages\imgui\imgui.h" />
+    <ClInclude Include="..\packages\imgui\imgui_impl_dx11.h" />
+    <ClInclude Include="..\packages\imgui\imgui_impl_glfw.h" />
+    <ClInclude Include="..\packages\imgui\imgui_impl_win32.h" />
+    <ClInclude Include="..\packages\imgui\imgui_internal.h" />
+    <ClInclude Include="..\packages\imgui\imstb_rectpack.h" />
+    <ClInclude Include="..\packages\imgui\imstb_textedit.h" />
+    <ClInclude Include="..\packages\imgui\imstb_truetype.h" />
     <ClInclude Include="Bindable.h" />
     <ClInclude Include="ConstantBuffer.h" />
     <ClInclude Include="Drawable.h" />

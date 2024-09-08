@@ -51,5 +51,10 @@ private:
     std::vector<std::shared_ptr<CubeDrawable>> Cube;
 
 
+public:
+    IDXGISwapChain* GetSwapChain() { return SwapChain.Get();};
+    ID3D11Device* GetDevice() { return D3DDevice.Get(); };
+    ID3D11DeviceContext* GetDeviceContext() { return D3DDeviceContext.Get(); };
+
 
 };
