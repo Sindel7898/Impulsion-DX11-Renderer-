@@ -7,11 +7,15 @@ template<typename T>
 class ConstantBuffer : public Bindable {
   
 public:
-    ConstantBuffer(ID3D11Device* device, std::vector<T> cbData, std::string ShaderToBind) {
+    ConstantBuffer(ID3D11Device* device, std::vector<T> cbData, std::string ShaderToBind, UINT startslot) {
         HoldShaderToBindText = ShaderToBind;
+        Startslot = startslot;
        
+     
+       // UINT paddedSize = static_cast<UINT>((dataSize + 15) / 16 * 16); // Align to next multiple of 16 = static_cast<UINT>((dataSize + 15) / 16 * 16); // Align to next multiple of 16
+
         D3D11_BUFFER_DESC ConstBufferDesc = {};
-        ConstBufferDesc.ByteWidth = static_cast<UINT>(sizeof(T) * cbData.size());
+        ConstBufferDesc.ByteWidth = sizeof(T) * cbData.size();;
         ConstBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
         ConstBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
         ConstBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
@@ -29,11 +33,11 @@ public:
 
         if (HoldShaderToBindText == "Vertex") {
 
-            context->VSSetConstantBuffers(0, 1, cConstantBuffer.GetAddressOf());
+            context->VSSetConstantBuffers(Startslot, 1, cConstantBuffer.GetAddressOf());
         }
         else if(HoldShaderToBindText == "Pixel")
         {
-            context->PSSetConstantBuffers(0, 1, cConstantBuffer.GetAddressOf());
+            context->PSSetConstantBuffers(Startslot, 1, cConstantBuffer.GetAddressOf());
 
         }
 
@@ -44,22 +48,20 @@ public:
         if (cConstantBuffer != nullptr) {
             
             D3D11_MAPPED_SUBRESOURCE mappedResource{};
-
            
-
             context->Map(cConstantBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
         
             memcpy(mappedResource.pData, data.data(), sizeof(T) * data.size());
 
             context->Unmap(cConstantBuffer.Get(), 0);
         }
-
-
     }
+
+
 private:
 
     string HoldShaderToBindText;
 
     Microsoft::WRL::ComPtr<ID3D11Buffer> cConstantBuffer;
-
+    UINT Startslot;
 };

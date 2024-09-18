@@ -12,22 +12,32 @@
 #include <DirectXMath.h>
 #include "ConstantBuffer.h"
 #include <WICTextureLoader.h>
+#include <iostream>
 
 class CubeDrawable : public Drawable {
 
 public:
-    CubeDrawable(ID3D11Device* device, ID3D11DeviceContext* D3DDeviceContext, Window* windowContextHolder, float locationX,float locationY,float locationZ);
+    CubeDrawable(ID3D11Device* device, ID3D11DeviceContext* D3DDeviceContext, Window* windowContextHolder, DirectX::XMFLOAT3 location);
+
+
+    void Update(ID3D11DeviceContext* context, ID3D11Device* device, Window* windowApp, float updateRotation, DirectX::XMFLOAT3A uLightPosition, DirectX::XMFLOAT4 uLightColor);
 
     virtual void Draw(ID3D11DeviceContext* context, ID3D11Device* device , Window* windowApp) override;
-    virtual void Update(ID3D11DeviceContext* context, ID3D11Device* device, Window* windowApp, float updateRotation);
 
 
-    float LocationX;
-    float LocationY;
-    float LocationZ;
-
-    std::shared_ptr<ConstantBuffer<DirectX::XMMATRIX>> transformationConstantBuffer;
+    DirectX::XMFLOAT3 Location;
 
 
+
+
+    struct LightData {
+
+        DirectX::XMFLOAT3A  LightPosition;
+        DirectX::XMFLOAT4 LightColor;
+    };
+
+    std::shared_ptr<ConstantBuffer<DirectX::XMMATRIX>> Matrix;
+
+    std::shared_ptr<ConstantBuffer<LightData>> LightBuffer;
 
 };

@@ -113,18 +113,22 @@ D3D11::D3D11(Window* windowApp){
 
     void D3D11::load() {
 
-      
+        DirectX::XMFLOAT3A Lightlocation = { 1.0f,1.0f,1.0f };
 
-        float spacing = 2.0f;
+        DirectX::XMFLOAT3 Cubelocation = { 1.0f,1.0f,20.0f };
+
+        Light1 = std::make_shared<Light>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, Lightlocation);
+
+        float spacing = 4.0f;
         
         for (int i = 0; i < 20; i++) {
 
             std::srand(static_cast<unsigned>(std::time(0)));
 
-            float x = (i % 5) * spacing - (spacing * 2); // Spread cubes along X
-            float y = ((i / 5) % 10) * spacing - (spacing * 2); // Spread cubes along Y
+             Cubelocation.x = (i % 5) * spacing - (spacing * 2); // Spread cubes along X
+             Cubelocation.y = ((i / 5) % 10) * spacing - (spacing * 2); // Spread cubes along Y
 
-            Cube.push_back(std::make_shared<CubeDrawable>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, x, y, 20.0f)); // Adjust parameters as needed
+            Cube.push_back(std::make_shared<CubeDrawable>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, Cubelocation)); // Adjust parameters as needed
 
         }
     
@@ -151,7 +155,7 @@ D3D11::D3D11(Window* windowApp){
         ImGui::End();
 
 
-        ClearBuffer(clearColor[1], clearColor[2], clearColor[3]);
+        ClearBuffer(clearColor[0], clearColor[1], clearColor[2]);
 
        
 
@@ -160,13 +164,19 @@ D3D11::D3D11(Window* windowApp){
 
         for (int i = 0; i < Cube.size(); i++) {
 
-            Cube[i]->Update(D3DDeviceContext.Get(), D3DDevice.Get(), windowContextHolder, rotaion);
+            Cube[i]->Update(D3DDeviceContext.Get(), D3DDevice.Get(), windowContextHolder, rotaion, Light1->GetLocation(),Light1->GetColor());
+
 
             Cube[i]->Draw(D3DDeviceContext.Get(), D3DDevice.Get(), windowContextHolder);
-
+            
             
         }
 
+     
+
+        Light1->Update(D3DDeviceContext.Get(), D3DDevice.Get(), windowContextHolder, rotaion);
+
+        Light1->Draw(D3DDeviceContext.Get(), D3DDevice.Get(), windowContextHolder);
 
         ImGui::Render();
         ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());

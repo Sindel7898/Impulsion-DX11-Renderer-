@@ -23,6 +23,7 @@ public :
 
         //Create Vertex Buffer
         HRESULT hr =   Device->CreateBuffer(&VertexBufferDesc, &VertexBufferSubSurfaceData, &vVertexBuffer);
+        
         if (SUCCEEDED(hr)) {
             vertexBufferCount++; // Increment the counter
             std::cout << "Vertex buffer created. Total count: " << vertexBufferCount << std::endl;

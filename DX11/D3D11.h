@@ -13,6 +13,7 @@
 #include <GLFW/glfw3native.h>
 #include <DirectXMath.h>
 #include "CubeDrawable.h"
+#include "Light.h"
 
 class D3D11
 {
@@ -49,6 +50,8 @@ private:
     Microsoft::WRL::ComPtr<ID3D11DepthStencilView> DepthSentcilView;
 
     std::vector<std::shared_ptr<CubeDrawable>> Cube;
+    std::shared_ptr<Light> Light1;
+
 
 
 public:

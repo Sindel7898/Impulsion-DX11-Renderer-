@@ -1,23 +1,35 @@
 struct VS_OUTPUT
 {
-    float4 Position : SV_Position;
-    float2 texCoord : TEXCOORD0;
+    float4 Pos : SV_POSITION;
+    float3 Normal : NORMAL;
+    float4 Color : COLOR;
 
 };
 
 cbuffer Cbuf : register(b0)
 {
-    matrix transform;
+    matrix WorldMatrix;
+    matrix ProjectionMatrix;
+    matrix ViewMatrix;
+    
 };
 
 
 
-VS_OUTPUT VSMain(float3 Pos : POSITION, float2 Texture : TEXCOORD)
+VS_OUTPUT VSMain(float3 Pos : POSITION, float4 Color : COLOR, float3 normals : NORMAL)
 {
     VS_OUTPUT output;
     
-    output.Position = mul(float4(Pos, 1.0f), transform);
-    output.texCoord = Texture;
+    float4 worldPosition = mul(float4(Pos, 1.0f), WorldMatrix);
+    
+    float4 viewPosition = mul(worldPosition, ViewMatrix);
+
+    output.Pos = mul(viewPosition, ProjectionMatrix);
+
+    
+    output.Normal = normalize(mul(float4(normals,0.0f), WorldMatrix));
+
+    output.Color = Color;
    
     return output;
 
