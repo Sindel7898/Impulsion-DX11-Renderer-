@@ -6,6 +6,7 @@ template<typename T>
 
 class VertexBuffer : public Bindable {
 public :
+
 	VertexBuffer(ID3D11Device* Device, std::vector<T> VertexData) {
 
 

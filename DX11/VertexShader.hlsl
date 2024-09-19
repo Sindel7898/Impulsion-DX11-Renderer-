@@ -3,7 +3,8 @@ struct VS_OUTPUT
     float4 Pos : SV_POSITION;
     float3 Normal : NORMAL;
     float4 Color : COLOR;
-
+    
+    
 };
 
 cbuffer Cbuf : register(b0)
@@ -16,7 +17,7 @@ cbuffer Cbuf : register(b0)
 
 
 
-VS_OUTPUT VSMain(float3 Pos : POSITION, float4 Color : COLOR, float3 normals : NORMAL)
+VS_OUTPUT VSMain(float3 Pos : POSITION, float3 normals : NORMAL, float4 Color : COLOR)
 {
     VS_OUTPUT output;
     

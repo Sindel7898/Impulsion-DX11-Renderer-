@@ -4,12 +4,23 @@
 
 std::vector<int> LightIndex = {
 
- 0, 1, 2, // Bottom side
-    0, 2, 3, // Bottom side
-    4, 6, 5, // Left side
-    7, 9, 8, // Non-facing side
-    10, 12, 11, // Right side
-    13, 15, 14 // Facing side
+
+      0, 1, 2,   0, 2, 3,
+
+      // Back face
+      4, 6, 5,   4, 7, 6,
+
+      // Left face
+      4, 5, 1,   4, 1, 0,
+
+      // Right face
+      3, 2, 6,   3, 6, 7,
+
+      // Top face
+      1, 5, 6,   1, 6, 2,
+
+      // Bottom face
+      4, 0, 3,   4, 3, 7,
 };
 
 
@@ -26,37 +37,24 @@ Light::Light(ID3D11Device* device, ID3D11DeviceContext* D3DDeviceContext, Window
     struct Vertex {
 
         DirectX::XMFLOAT3A position;   // Vertex position
+        DirectX::XMFLOAT3A normal;
         DirectX::XMFLOAT4 color;
-        DirectX::XMFLOAT3A normals;
 
     };
 
 
     std::vector<Vertex> CubeData = {
 
-       { DirectX::XMFLOAT3A(-0.5f, 0.0f,  0.5f), BaseColor,DirectX::XMFLOAT3A(0.0f, -1.0f, 0.0f)},
-       { DirectX::XMFLOAT3A(-0.5f, 0.0f, -0.5f), BaseColor,DirectX::XMFLOAT3A(0.0f, -1.0f, 0.0f)},
-       { DirectX::XMFLOAT3A(0.5f, 0.0f, -0.5f), BaseColor,DirectX::XMFLOAT3A(0.0f, -1.0f, 0.0f)},
-       { DirectX::XMFLOAT3A(0.5f, 0.0f,  0.5f), BaseColor,DirectX::XMFLOAT3A(0.0f, -1.0f, 0.0f)},
+        { DirectX::XMFLOAT3A(-1.0f, -1.0f, -1.0f),  DirectX::XMFLOAT3A(0.0f, 0.0f, -1.0f),  BaseColor }, // Bottom-left-front (Red)
+        { DirectX::XMFLOAT3A(-1.0f,  1.0f, -1.0f),   DirectX::XMFLOAT3A(0.0f, 0.0f, -1.0f), BaseColor }, // Top-left-front (Green)
+        { DirectX::XMFLOAT3A(1.0f,  1.0f, -1.0f),    DirectX::XMFLOAT3A(0.0f, 0.0f, -1.0f), BaseColor }, // Top-right-front (Blue)
+        { DirectX::XMFLOAT3A(1.0f, -1.0f, -1.0f),    DirectX::XMFLOAT3A(0.0f, 0.0f, -1.0f), BaseColor }, // Bottom-right-front (Yellow)
 
-       // Back face (normal pointing backward along +Z axis)
-       { DirectX::XMFLOAT3A(-0.5f, 0.0f,  0.5f),   BaseColor,DirectX::XMFLOAT3A(-0.8f, 0.5f,  0.0f)},
-       { DirectX::XMFLOAT3A(-0.5f, 0.0f, -0.5f),   BaseColor,DirectX::XMFLOAT3A(-0.8f, 0.5f,  0.0f)},
-       { DirectX::XMFLOAT3A(0.0f, 0.8f,  0.0f),   BaseColor,DirectX::XMFLOAT3A(-0.8f, 0.5f,  0.0f)},
-      
-        
-        { DirectX::XMFLOAT3A(-0.5f, 0.0f, -0.5f),   BaseColor , DirectX::XMFLOAT3A(0.0f, 0.5f, -0.8f)},
-        { DirectX::XMFLOAT3A(0.5f, 0.0f, -0.5f),   BaseColor , DirectX::XMFLOAT3A(0.0f, 0.5f, -0.8f) },
-        { DirectX::XMFLOAT3A(0.0f, 0.8f,  0.0f),   BaseColor , DirectX::XMFLOAT3A(0.0f, 0.5f, -0.8f) },
-
-     { DirectX::XMFLOAT3A(0.5f, 0.0f, -0.5f),   BaseColor , DirectX::XMFLOAT3A(0.8f, 0.5f,  0.0f) },
-     { DirectX::XMFLOAT3A(0.5f, 0.0f,  0.5f),   BaseColor , DirectX::XMFLOAT3A(0.8f, 0.5f,  0.0f) },
-     { DirectX::XMFLOAT3A(0.0f, 0.8f,  0.0f),   BaseColor , DirectX::XMFLOAT3A(0.8f, 0.5f,  0.0f) },
-
-      { DirectX::XMFLOAT3A (0.5f, 0.0f,  0.5f),   BaseColor , DirectX::XMFLOAT3A(0.0f, 0.5f,  0.8f) },
-      { DirectX::XMFLOAT3A(-0.5f, 0.0f,  0.5f),   BaseColor , DirectX::XMFLOAT3A(0.0f, 0.5f,  0.8f) },
-      { DirectX::XMFLOAT3A(0.0f, 0.8f,  0.0f),   BaseColor , DirectX::XMFLOAT3A(0.0f, 0.5f,  0.8f) },
-
+        // Back face                                                                        
+        { DirectX::XMFLOAT3A(-1.0f, -1.0f,  1.0f),   DirectX::XMFLOAT3A(0.0f, 0.0f, 1.0f),  BaseColor }, // Bottom-left-back (Magenta)
+        { DirectX::XMFLOAT3A(-1.0f,  1.0f,  1.0f),   DirectX::XMFLOAT3A(0.0f, 0.0f, 1.0f),  BaseColor }, // Top-left-back (Cyan)
+        { DirectX::XMFLOAT3A(1.0f,  1.0f,  1.0f),    DirectX::XMFLOAT3A(0.0f, 0.0f, 1.0f),  BaseColor }, // Top-right-back (White)
+        { DirectX::XMFLOAT3A(1.0f, -1.0f,  1.0f),    DirectX::XMFLOAT3A(0.0f, 0.0f, 1.0f),  BaseColor }, // Bo
 
 
            
@@ -107,8 +105,8 @@ Light::Light(ID3D11Device* device, ID3D11DeviceContext* D3DDeviceContext, Window
     D3D11_INPUT_ELEMENT_DESC ied[]{
 
          {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT , 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-         {"COLOR",    0, DXGI_FORMAT_R32G32B32A32_FLOAT , 0, 16, D3D11_INPUT_PER_VERTEX_DATA, 0},
-         {"NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT , 0, 32, D3D11_INPUT_PER_VERTEX_DATA, 0},
+         {"NORMAL",    0, DXGI_FORMAT_R32G32B32_FLOAT , 0, 16, D3D11_INPUT_PER_VERTEX_DATA, 0},
+         {"COLOR",   0, DXGI_FORMAT_R32G32B32A32_FLOAT , 0, 32, D3D11_INPUT_PER_VERTEX_DATA, 0},
 
 
     };
@@ -128,7 +126,7 @@ void Light::Update(ID3D11DeviceContext* context, ID3D11Device* device, Window* w
 {
     ImGui::Begin("Cube Controls");
 
-    ImGui::SliderFloat3("Cube Position", &Location.x, -200.0f, 200.0f);
+    ImGui::SliderFloat3("Cube Position", &Location.x, -40.0f, 40.0f);
 
     ImGui::End();
 

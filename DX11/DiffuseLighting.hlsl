@@ -2,7 +2,7 @@
 
 cbuffer LightBuffer : register(b0)
 {
-    float3 lightPosition;
+    float3 lightPosition : SV_POSITION;
     float4 lightColor;
 };
 
@@ -24,8 +24,10 @@ float4 PSMain(VSOUT input) : SV_TARGET
     
     float4 diffuse = diffuseFactor * lightColor;
     
-    float4 finalColor = float4(input.color, 1.0f) * diffuse;
+    float4 finalColor = saturate(float4(input.color, 1.0f) * diffuse);
     
-    return diffuse;
+    //return float4(input.color, 1);
+
+    return finalColor;
 
 }

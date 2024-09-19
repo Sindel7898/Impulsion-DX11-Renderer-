@@ -5,12 +5,22 @@ Window* windowContextHolderHolder;
 
 std::vector<int> CubeIndex = {
      
-   0, 1, 2, // Bottom side
-    0, 2, 3, // Bottom side
-    4, 6, 5, // Left side
-    7, 9, 8, // Non-facing side
-    10, 12, 11, // Right side
-    13, 15, 14 // Facing side
+      0, 1, 2,   0, 2, 3,
+
+      // Back face
+      4, 6, 5,   4, 7, 6,
+
+      // Left face
+      4, 5, 1,   4, 1, 0,
+
+      // Right face
+      3, 2, 6,   3, 6, 7,
+
+      // Top face
+      1, 5, 6,   1, 6, 2,
+
+      // Bottom face
+      4, 0, 3,   4, 3, 7,
 
 };
 
@@ -36,31 +46,16 @@ CubeDrawable::CubeDrawable(ID3D11Device* device, ID3D11DeviceContext* D3DDeviceC
 
      std::vector<Vertex> CubeData = {
 
-    
+        { DirectX::XMFLOAT3A( - 1.0f, -1.0f, -1.0f),  DirectX::XMFLOAT3A(0.0f, 0.0f, -1.0f),  DirectX::XMFLOAT3A(1.0f, 0.0f, 0.0f) }, // Bottom-left-front (Red)
+        { DirectX::XMFLOAT3A(-1.0f,  1.0f, -1.0f ),   DirectX::XMFLOAT3A(0.0f, 0.0f, -1.0f ), DirectX::XMFLOAT3A(1.0f, 0.0f, 0.0f) }, // Top-left-front (Green)
+        { DirectX::XMFLOAT3A(1.0f,  1.0f, -1.0f ),    DirectX::XMFLOAT3A(0.0f, 0.0f, -1.0f ), DirectX::XMFLOAT3A(1.0f, 0.0f, 0.0f) }, // Top-right-front (Blue)
+        { DirectX::XMFLOAT3A(1.0f, -1.0f, -1.0f ),    DirectX::XMFLOAT3A(0.0f, 0.0f, -1.0f ), DirectX::XMFLOAT3A(1.0f, 0.0f, 0.0f) }, // Bottom-right-front (Yellow)
 
-
-       { DirectX::XMFLOAT3A(-0.5f, 0.0f,  0.5f),DirectX::XMFLOAT3A(0.0f, -1.0f, 0.0f),DirectX::XMFLOAT3A(0.0f, 0.0f, -1.0f) },
-       { DirectX::XMFLOAT3A(-0.5f, 0.0f, -0.5f),DirectX::XMFLOAT3A(0.0f, -1.0f, 0.0f),DirectX::XMFLOAT3A(0.0f, 0.0f, -1.0f)},
-       { DirectX::XMFLOAT3A(0.5f, 0.0f, -0.5f),DirectX::XMFLOAT3A(0.0f, -1.0f, 0.0f),DirectX::XMFLOAT3A(0.0f, 0.0f, -1.0f)},
-       { DirectX::XMFLOAT3A(0.5f, 0.0f,  0.5f),DirectX::XMFLOAT3A(0.0f, -1.0f, 0.0f),DirectX::XMFLOAT3A(0.0f, 0.0f, -1.0f)},
-
-         // Back face (normal pointing backward along +Z axis)
-       { DirectX::XMFLOAT3A(-0.5f, 0.0f,  0.5f),DirectX::XMFLOAT3A(-0.8f, 0.5f,  0.0f),DirectX::XMFLOAT3A(0.0f, 0.0f, -1.0f)},
-       { DirectX::XMFLOAT3A(-0.5f, 0.0f, -0.5f),DirectX::XMFLOAT3A(-0.8f, 0.5f,  0.0f),DirectX::XMFLOAT3A(0.0f, 0.0f, -1.0f)},
-       { DirectX::XMFLOAT3A(0.0f, 0.8f,  0.0f),DirectX::XMFLOAT3A(-0.8f, 0.5f,  0.0f),DirectX::XMFLOAT3A(0.0f, 0.0f, -1.0f)},
-
-
-       { DirectX::XMFLOAT3A(-0.5f, 0.0f, -0.5f) , DirectX::XMFLOAT3A(0.0f, 0.5f, -0.8f),DirectX::XMFLOAT3A(0.0f, 0.0f, -1.0f)},
-       { DirectX::XMFLOAT3A(0.5f, 0.0f, -0.5f) , DirectX::XMFLOAT3A(0.0f, 0.5f, -0.8f),DirectX::XMFLOAT3A(0.0f, 0.0f, -1.0f) },
-       { DirectX::XMFLOAT3A(0.0f, 0.8f,  0.0f) , DirectX::XMFLOAT3A(0.0f, 0.5f, -0.8f),DirectX::XMFLOAT3A(0.0f, 0.0f, -1.0f) },
-
-       { DirectX::XMFLOAT3A(0.5f, 0.0f, -0.5f) , DirectX::XMFLOAT3A(0.8f, 0.5f,  0.0f),DirectX::XMFLOAT3A(0.0f, 0.0f, -1.0f) },
-       { DirectX::XMFLOAT3A(0.5f, 0.0f,  0.5f) , DirectX::XMFLOAT3A(0.8f, 0.5f,  0.0f),DirectX::XMFLOAT3A(0.0f, 0.0f, -1.0f) },
-       { DirectX::XMFLOAT3A(0.0f, 0.8f,  0.0f) , DirectX::XMFLOAT3A(0.8f, 0.5f,  0.0f),DirectX::XMFLOAT3A(0.0f, 0.0f, -1.0f) },
-
-       { DirectX::XMFLOAT3A(0.5f, 0.0f,  0.5f) , DirectX::XMFLOAT3A(0.0f, 0.5f,  0.8f),DirectX::XMFLOAT3A(0.0f, 0.0f, -1.0f) },
-       { DirectX::XMFLOAT3A(-0.5f, 0.0f,  0.5f) , DirectX::XMFLOAT3A(0.0f, 0.5f,  0.8f),DirectX::XMFLOAT3A(0.0f, 0.0f, -1.0f) },
-       { DirectX::XMFLOAT3A(0.0f, 0.8f,  0.0f) , DirectX::XMFLOAT3A(0.0f, 0.5f,  0.8f) ,DirectX::XMFLOAT3A(0.0f, 0.0f, -1.0f)},
+    // Back face
+        { DirectX::XMFLOAT3A(-1.0f, -1.0f,  1.0f ),   DirectX::XMFLOAT3A(0.0f, 0.0f, 1.0f ),  DirectX::XMFLOAT3A(1.0f, 0.0f, 0.0f) }, // Bottom-left-back (Magenta)
+        { DirectX::XMFLOAT3A(-1.0f,  1.0f,  1.0f ),   DirectX::XMFLOAT3A(0.0f, 0.0f, 1.0f ),  DirectX::XMFLOAT3A(1.0f, 0.0f, 0.0f) }, // Top-left-back (Cyan)
+        { DirectX::XMFLOAT3A(1.0f,  1.0f,  1.0f ),    DirectX::XMFLOAT3A(0.0f, 0.0f, 1.0f ),  DirectX::XMFLOAT3A(1.0f, 0.0f, 0.0f) }, // Top-right-back (White)
+        { DirectX::XMFLOAT3A(1.0f, -1.0f,  1.0f ),    DirectX::XMFLOAT3A(0.0f, 0.0f, 1.0f ),  DirectX::XMFLOAT3A(1.0f, 0.0f, 0.0f) } // Bo
      
      };
 
@@ -121,8 +116,8 @@ CubeDrawable::CubeDrawable(ID3D11Device* device, ID3D11DeviceContext* D3DDeviceC
    D3D11_INPUT_ELEMENT_DESC ied[]{
 
         {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0}
+        {"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 16, D3D11_INPUT_PER_VERTEX_DATA, 0},
+        {"COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 32, D3D11_INPUT_PER_VERTEX_DATA, 0}
 
 
    };
@@ -146,8 +141,8 @@ void CubeDrawable::Update(ID3D11DeviceContext* context, ID3D11Device* device, Wi
 
     DirectX::XMMATRIX WorldMatrix = DirectX::XMMatrixTranspose(
       
-        DirectX::XMMatrixScaling(2.0f, 2.0f, 2.0f) *
-        DirectX::XMMatrixRotationZ(0) *
+        DirectX::XMMatrixScaling(1.0f, 1.0f, 1.0f) *
+        DirectX::XMMatrixRotationZ(updateRotation) *
         DirectX::XMMatrixRotationX(0) *
         DirectX::XMMatrixTranslation(Location.x, Location.y, Location.z));
 

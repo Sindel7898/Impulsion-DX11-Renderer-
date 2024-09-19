@@ -113,7 +113,7 @@ D3D11::D3D11(Window* windowApp){
 
     void D3D11::load() {
 
-        DirectX::XMFLOAT3A Lightlocation = { 1.0f,1.0f,1.0f };
+        DirectX::XMFLOAT3A Lightlocation = { -2.0f,1.0f,1.0f };
 
         DirectX::XMFLOAT3 Cubelocation = { 1.0f,1.0f,20.0f };
 
