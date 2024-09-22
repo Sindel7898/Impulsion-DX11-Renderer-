@@ -30,7 +30,7 @@ public:
 
 private:
     DirectX::XMFLOAT3A Location;
-    DirectX::XMFLOAT4 BaseColor = { 1.0f,0.0f,1.0f,1.0f };
+    DirectX::XMFLOAT4 BaseColor = { 1.0f,1.0f,1.0f,1.0f };
 
    
     std::shared_ptr<ConstantBuffer<DirectX::XMMATRIX>> transformationConstantBuffer;

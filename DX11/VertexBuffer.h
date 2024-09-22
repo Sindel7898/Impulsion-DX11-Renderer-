@@ -9,7 +9,7 @@ public :
 
 	VertexBuffer(ID3D11Device* Device, std::vector<T> VertexData) {
 
-
+        vertexBufferCount = 0;
         D3D11_BUFFER_DESC VertexBufferDesc = {}; 
         VertexBufferDesc.ByteWidth = static_cast<UINT>( sizeof(T) * VertexData.size());
 

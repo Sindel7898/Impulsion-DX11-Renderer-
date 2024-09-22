@@ -148,6 +148,7 @@
     <ClCompile Include="..\packages\imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="..\packages\imgui\imgui_tables.cpp" />
     <ClCompile Include="..\packages\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Drawable.cpp" />
     <ClCompile Include="CubeDrawable.cpp" />
     <ClCompile Include="Light.cpp" />
@@ -167,6 +168,7 @@
     <ClInclude Include="..\packages\imgui\imstb_textedit.h" />
     <ClInclude Include="..\packages\imgui\imstb_truetype.h" />
     <ClInclude Include="Bindable.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="ConstantBuffer.h" />
     <ClInclude Include="Drawable.h" />
     <ClInclude Include="IndexBuffer.h" />

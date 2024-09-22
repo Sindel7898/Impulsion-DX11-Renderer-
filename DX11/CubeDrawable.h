@@ -13,6 +13,7 @@
 #include "ConstantBuffer.h"
 #include <WICTextureLoader.h>
 #include <iostream>
+#include"Camera.h"
 
 class CubeDrawable : public Drawable {
 

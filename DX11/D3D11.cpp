@@ -1,5 +1,6 @@
 #include "D3D11.h"
 #include "MACROS.h"
+#include <random>
 
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "dxgi.lib")
@@ -121,12 +122,21 @@ D3D11::D3D11(Window* windowApp){
 
         float spacing = 4.0f;
         
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 100; i++) {
 
-            std::srand(static_cast<unsigned>(std::time(0)));
+            std::random_device rd;  // Obtain a random number from hardware
+            std::mt19937 eng(rd()); // Seed the generator
 
-             Cubelocation.x = (i % 5) * spacing - (spacing * 2); // Spread cubes along X
-             Cubelocation.y = ((i / 5) % 10) * spacing - (spacing * 2); // Spread cubes along Y
+            // Define the range
+            std::uniform_int_distribution<> distr(-25, 25); // Define the range [1, 100]
+
+            // Generate and output a random number
+            Cubelocation.x = distr(eng);
+
+
+            // Define the range
+            // Generate and output a random number
+            Cubelocation.y = distr(eng);
 
             Cube.push_back(std::make_shared<CubeDrawable>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, Cubelocation)); // Adjust parameters as needed
 
@@ -150,10 +160,14 @@ D3D11::D3D11(Window* windowApp){
         ImGui::Text("This is a window with DirectX 11 and GLFW.");
         ImGui::End();
 
+
         ImGui::Begin("Background Color Picker");
         ImGui::ColorEdit3("Background Color", clearColor);  
         ImGui::End();
 
+        ImGui::Begin("FPS Display");
+        ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
+        ImGui::End();
 
         ClearBuffer(clearColor[0], clearColor[1], clearColor[2]);
 

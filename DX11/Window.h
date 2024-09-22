@@ -43,6 +43,8 @@ private:
 
     std::string WindowTitle;
    
+    double mouseX, mouseY;
+    bool SetMouse = true;
 
 public :
 

@@ -11,6 +11,7 @@ struct VSIN
 {
     float3 position : POSITION;
     float3 normal : NORMAL;
+    float2 tex : TEXCOORD;
     float3 color : COLOR;
 
 };
@@ -19,7 +20,9 @@ struct VSIN
 struct VSOUT
 {
     float4 position : SV_POSITION;
+    float4 WorldPosition : WorldPosition;
     float3 normal : NORMAL;
+    float2 tex : TEXCOORD;
     float3 color : COLOR;
 
 };
@@ -38,7 +41,9 @@ VSOUT VSMain(VSIN input)
 
     output.normal = normalize(mul(float4(input.normal, 0.0f), WorldMatrix));
     
+    output.WorldPosition = worldPosition;
     output.color = input.color;
-        
+    output.tex = input.tex;
+    
     return output;
 }

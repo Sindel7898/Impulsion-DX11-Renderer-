@@ -7,11 +7,11 @@ using namespace std;
 
 class IndexBuffer : public Bindable {
 public:
-	IndexBuffer(ID3D11Device* device , std::vector<int> CubeIndex) {
+	IndexBuffer(ID3D11Device* device , std::vector<UINT> CubeIndex) {
 
 
         D3D11_BUFFER_DESC IndexBufferDesc = {};
-        IndexBufferDesc.ByteWidth = static_cast<UINT>(sizeof(int) * CubeIndex.size());
+        IndexBufferDesc.ByteWidth = static_cast<UINT>(sizeof(UINT) * CubeIndex.size());
         IndexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
         IndexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
         IndexBufferDesc.CPUAccessFlags = 0;

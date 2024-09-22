@@ -46,6 +46,9 @@ bool Window::Initialize()
     return true;
 }
 
+float lastTime = 0.0;
+float deltaTime = 0.0;
+
 void Window::Run()
 {
 
@@ -55,14 +58,31 @@ void Window::Run()
         return;
     }
     
-       
+    float lastTime = 0.0;
+
     
 
     while (!glfwWindowShouldClose(_window))
     {
         glfwPollEvents();
-        
-       
+
+        float currentTime = glfwGetTime();
+        deltaTime = currentTime - lastTime;
+        lastTime = currentTime;
+
+
+        if(glfwGetMouseButton(_window, GLFW_MOUSE_BUTTON_RIGHT)){
+
+            Camera::GetInstance().Update(deltaTime, GetWindow());
+          
+        }
+        else
+        {
+            glfwSetInputMode(_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+
+        }
+
+
         TESTD3D->Update();
         TESTD3D->EndFrame();
 

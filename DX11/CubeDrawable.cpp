@@ -3,25 +3,22 @@
 
 Window* windowContextHolderHolder;
 
-std::vector<int> CubeIndex = {
-     
-      0, 1, 2,   0, 2, 3,
+std::vector<UINT> CubeIndex = {
 
-      // Back face
-      4, 6, 5,   4, 7, 6,
+    // Front face
+    0, 1, 2, 0, 2, 3,
+    // Back face
+    4,6,5,4,7,6,
+    // Left face
+    8, 10, 9, 8, 11, 10,
 
-      // Left face
-      4, 5, 1,   4, 1, 0,
+    // Right face
+    12, 13, 14, 12, 14, 15,
+    // Top face
+    16, 18, 17, 16, 19, 18,
 
-      // Right face
-      3, 2, 6,   3, 6, 7,
-
-      // Top face
-      1, 5, 6,   1, 6, 2,
-
-      // Bottom face
-      4, 0, 3,   4, 3, 7,
-
+    // Bottom face
+    20, 21, 22, 20, 22, 23
 };
 
 
@@ -38,26 +35,82 @@ CubeDrawable::CubeDrawable(ID3D11Device* device, ID3D11DeviceContext* D3DDeviceC
 
         DirectX::XMFLOAT3A position;   // Vertex position
         DirectX::XMFLOAT3A normal;
+        DirectX::XMFLOAT2A Texture;
         DirectX::XMFLOAT3A color;
 
 
     };
 
+    DirectX::XMFLOAT3A BaseColor = { 1.0f,1.0f,1.0f };
 
-     std::vector<Vertex> CubeData = {
+    std::vector<Vertex> CubeData = {
 
-        { DirectX::XMFLOAT3A( - 1.0f, -1.0f, -1.0f),  DirectX::XMFLOAT3A(0.0f, 0.0f, -1.0f),  DirectX::XMFLOAT3A(1.0f, 0.0f, 0.0f) }, // Bottom-left-front (Red)
-        { DirectX::XMFLOAT3A(-1.0f,  1.0f, -1.0f ),   DirectX::XMFLOAT3A(0.0f, 0.0f, -1.0f ), DirectX::XMFLOAT3A(1.0f, 0.0f, 0.0f) }, // Top-left-front (Green)
-        { DirectX::XMFLOAT3A(1.0f,  1.0f, -1.0f ),    DirectX::XMFLOAT3A(0.0f, 0.0f, -1.0f ), DirectX::XMFLOAT3A(1.0f, 0.0f, 0.0f) }, // Top-right-front (Blue)
-        { DirectX::XMFLOAT3A(1.0f, -1.0f, -1.0f ),    DirectX::XMFLOAT3A(0.0f, 0.0f, -1.0f ), DirectX::XMFLOAT3A(1.0f, 0.0f, 0.0f) }, // Bottom-right-front (Yellow)
+        // Front face
+       { DirectX::XMFLOAT3A(-1.0f, -1.0f, -1.0f), DirectX::XMFLOAT3A(0.0f, 0.0f, -0.0f), DirectX::XMFLOAT2A(0.0f, 1.0f), BaseColor }, // Bottom-left
+       { DirectX::XMFLOAT3A(-1.0f,  1.0f, -1.0f), DirectX::XMFLOAT3A(0.0f, 0.0f, -0.0f), DirectX::XMFLOAT2A(0.0f, 0.0f),  BaseColor }, // Top-left
+       { DirectX::XMFLOAT3A(1.0f,  1.0f, -1.0f),  DirectX::XMFLOAT3A(0.0f, 0.0f, -0.0f), DirectX::XMFLOAT2A(1.0f, 0.0f), BaseColor }, // Top-right
+       { DirectX::XMFLOAT3A(1.0f, -1.0f, -1.0f),  DirectX::XMFLOAT3A(0.0f, 0.0f, -0.0f), DirectX::XMFLOAT2A(1.0f, 1.0f),  BaseColor }, // Bottom-right
 
-    // Back face
-        { DirectX::XMFLOAT3A(-1.0f, -1.0f,  1.0f ),   DirectX::XMFLOAT3A(0.0f, 0.0f, 1.0f ),  DirectX::XMFLOAT3A(1.0f, 0.0f, 0.0f) }, // Bottom-left-back (Magenta)
-        { DirectX::XMFLOAT3A(-1.0f,  1.0f,  1.0f ),   DirectX::XMFLOAT3A(0.0f, 0.0f, 1.0f ),  DirectX::XMFLOAT3A(1.0f, 0.0f, 0.0f) }, // Top-left-back (Cyan)
-        { DirectX::XMFLOAT3A(1.0f,  1.0f,  1.0f ),    DirectX::XMFLOAT3A(0.0f, 0.0f, 1.0f ),  DirectX::XMFLOAT3A(1.0f, 0.0f, 0.0f) }, // Top-right-back (White)
-        { DirectX::XMFLOAT3A(1.0f, -1.0f,  1.0f ),    DirectX::XMFLOAT3A(0.0f, 0.0f, 1.0f ),  DirectX::XMFLOAT3A(1.0f, 0.0f, 0.0f) } // Bo
-     
-     };
+       // Back face (Z = 1)                       
+       { DirectX::XMFLOAT3A(-1.0f, -1.0f, 1.0f),  DirectX::XMFLOAT3A(0.0f, 0.0f, -0.0f), DirectX::XMFLOAT2A(1.0f, 1.0f), BaseColor },  // Bottom-left
+       { DirectX::XMFLOAT3A(-1.0f,  1.0f, 1.0f),  DirectX::XMFLOAT3A(0.0f, 0.0f, -0.0f), DirectX::XMFLOAT2A(1.0f, 0.0f), BaseColor },  // Top-left
+       { DirectX::XMFLOAT3A(1.0f,  1.0f, 1.0f),   DirectX::XMFLOAT3A(0.0f, 0.0f, -0.0f), DirectX::XMFLOAT2A(0.0f, 0.0f), BaseColor },  // Top-right
+       { DirectX::XMFLOAT3A(1.0f, -1.0f, 1.0f),   DirectX::XMFLOAT3A(0.0f, 0.0f, -0.0f), DirectX::XMFLOAT2A(0.0f, 1.0f), BaseColor },  // Bottom-right
+       // Left face (X = -1)                      
+       { DirectX::XMFLOAT3A(-1.0f, -1.0f, -1.0f), DirectX::XMFLOAT3A(0.0f, 0.0f, -0.0f), DirectX::XMFLOAT2A(1.0f, 1.0f), BaseColor },  // Bottom-front
+       { DirectX::XMFLOAT3A(-1.0f,  1.0f, -1.0f), DirectX::XMFLOAT3A(0.0f, 0.0f, -0.0f), DirectX::XMFLOAT2A(1.0f, 0.0f), BaseColor },  // Top-front
+       { DirectX::XMFLOAT3A(-1.0f,  1.0f,  1.0f), DirectX::XMFLOAT3A(0.0f, 0.0f, -0.0f), DirectX::XMFLOAT2A(0.0f, 0.0f), BaseColor },  // Top-back
+       { DirectX::XMFLOAT3A(-1.0f, -1.0f,  1.0f), DirectX::XMFLOAT3A(0.0f, 0.0f, -0.0f), DirectX::XMFLOAT2A(0.0f, 1.0f), BaseColor },  // Bottom-back
+                                                 
+       // Right face (X = 1)                     
+       { DirectX::XMFLOAT3A(1.0f, -1.0f, -1.0f),  DirectX::XMFLOAT3A(0.0f, 0.0f, -0.0f),  DirectX::XMFLOAT2A(0.0f, 1.0f), BaseColor },  // Bottom-front
+       { DirectX::XMFLOAT3A(1.0f,  1.0f, -1.0f),  DirectX::XMFLOAT3A(0.0f, 0.0f, -0.0f),  DirectX::XMFLOAT2A(0.0f, 0.0f), BaseColor },  // Top-front
+       { DirectX::XMFLOAT3A(1.0f,  1.0f,  1.0f),  DirectX::XMFLOAT3A(0.0f, 0.0f, -0.0f),  DirectX::XMFLOAT2A(1.0f, 0.0f), BaseColor },  // Top-back
+       { DirectX::XMFLOAT3A(1.0f, -1.0f,  1.0f),  DirectX::XMFLOAT3A(0.0f, 0.0f, -0.0f),  DirectX::XMFLOAT2A(1.0f, 1.0f), BaseColor },  // Bottom-back
+                                                  
+       // Top face (Y = 1)                      
+       { DirectX::XMFLOAT3A(-1.0f, 1.0f, -1.0f),  DirectX::XMFLOAT3A(0.0f, 0.0f, -0.0f),  DirectX::XMFLOAT2A(0.0f, 0.0f), BaseColor },  // Front-left
+       { DirectX::XMFLOAT3A(1.0f, 1.0f, -1.0f),   DirectX::XMFLOAT3A(0.0f, 0.0f, -0.0f),  DirectX::XMFLOAT2A(1.0f, 0.0f), BaseColor },  // Front-right
+       { DirectX::XMFLOAT3A(1.0f, 1.0f,  1.0f),   DirectX::XMFLOAT3A(0.0f, 0.0f, -0.0f),  DirectX::XMFLOAT2A(1.0f, 1.0f), BaseColor },  // Back-right
+       { DirectX::XMFLOAT3A(-1.0f, 1.0f,  1.0f),  DirectX::XMFLOAT3A(0.0f, 0.0f, -0.0f),  DirectX::XMFLOAT2A(0.0f, 1.0f), BaseColor },  // Back-left
+                                                  
+       // Bottom face (Y = -1)                   
+       { DirectX::XMFLOAT3A(-1.0f, -1.0f, -1.0f), DirectX::XMFLOAT3A(0.0f, 0.0f, -0.0f), DirectX::XMFLOAT2A(0.0f, 1.0f), BaseColor },  // Front-left
+       { DirectX::XMFLOAT3A(1.0f, -1.0f, -1.0f),  DirectX::XMFLOAT3A(0.0f, 0.0f, -0.0f), DirectX::XMFLOAT2A(1.0f, 1.0f), BaseColor },  // Front-right
+       { DirectX::XMFLOAT3A(1.0f, -1.0f,  1.0f),  DirectX::XMFLOAT3A(0.0f, 0.0f, -0.0f), DirectX::XMFLOAT2A(1.0f, 0.0f), BaseColor },  // Back-right
+       { DirectX::XMFLOAT3A(-1.0f, -1.0f,  1.0f), DirectX::XMFLOAT3A(0.0f, 0.0f, -0.0f), DirectX::XMFLOAT2A(0.0f, 1.0f), BaseColor },  // Back-left
+
+
+
+    };
+
+
+    for (int i = 0; i < CubeIndex.size()/3; ++i) {
+
+        auto i0 = CubeIndex[i * 3 + 0];
+        auto i1 = CubeIndex[i * 3 + 1];
+        auto i2 = CubeIndex[i * 3 + 2];
+
+        DirectX::XMVECTOR  V0 = DirectX::XMLoadFloat3(&CubeData[i0].position);
+        DirectX::XMVECTOR  V1 = DirectX::XMLoadFloat3(&CubeData[i1].position);
+        DirectX::XMVECTOR  V2 = DirectX::XMLoadFloat3(&CubeData[i2].position);
+
+
+
+        DirectX::XMVECTOR E1 = DirectX::XMVectorSubtract(V1, V0);
+        DirectX::XMVECTOR E2 = DirectX::XMVectorSubtract(V2, V0);
+        DirectX::XMVECTOR FACENORMAL = DirectX::XMVector3Cross(E1, E2);
+
+        DirectX::XMFLOAT3A FloatFacenormal;
+
+        DirectX::XMStoreFloat3A(&FloatFacenormal, FACENORMAL);
+
+        CubeData[i0].normal = FloatFacenormal;
+        CubeData[i1].normal = FloatFacenormal;
+        CubeData[i2].normal = FloatFacenormal;
+
+    }
+
 
 
      auto vertexBuffer =  std::make_shared<VertexBuffer<Vertex>>(device, CubeData);
@@ -93,7 +146,31 @@ CubeDrawable::CubeDrawable(ID3D11Device* device, ID3D11DeviceContext* D3DDeviceC
    LightBuffer = std::make_shared<ConstantBuffer<LightData>>(device, LightDatainfo, "Pixel",0);
    AddBindable(LightBuffer);
 
+   ID3D11Resource* texture = nullptr;
+ 
+   ID3D11ShaderResourceView* textureView = nullptr;
 
+  
+   DirectX::CreateWICTextureFromFile(device, D3DDeviceContext, L"Texture/bunny.png", &texture, &textureView);
+   
+   D3D11_SAMPLER_DESC samplerDesc = {};
+
+   samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR; // Linear filtering
+   samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;    // Wrap mode for U
+   samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;    // Wrap mode for V
+   samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;    // Wrap mode for W
+   samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+   samplerDesc.MinLOD = 0;
+   samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+   samplerDesc.MipLODBias = 0;
+   samplerDesc.MaxAnisotropy = 1;
+
+   ID3D11SamplerState* samplerState;
+
+   device->CreateSamplerState(&samplerDesc, &samplerState);
+   D3DDeviceContext->PSSetSamplers(0, 1, &samplerState);
+
+   D3DDeviceContext->PSSetShaderResources(0, 1, &textureView);
 
    /// Create index Buffer/////////////////////////////////////////////////////////////////
 
@@ -117,7 +194,8 @@ CubeDrawable::CubeDrawable(ID3D11Device* device, ID3D11DeviceContext* D3DDeviceC
 
         {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
         {"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 16, D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 32, D3D11_INPUT_PER_VERTEX_DATA, 0}
+        {"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 32, D3D11_INPUT_PER_VERTEX_DATA, 0},
+        {"COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 48, D3D11_INPUT_PER_VERTEX_DATA, 0}
 
 
    };
@@ -137,7 +215,6 @@ void CubeDrawable::Update(ID3D11DeviceContext* context, ID3D11Device* device, Wi
     DirectX::XMFLOAT3A uLightPosition,
     DirectX::XMFLOAT4 uLightColor){
 
-    
 
     DirectX::XMMATRIX WorldMatrix = DirectX::XMMatrixTranspose(
       
@@ -146,20 +223,11 @@ void CubeDrawable::Update(ID3D11DeviceContext* context, ID3D11Device* device, Wi
         DirectX::XMMatrixRotationX(0) *
         DirectX::XMMatrixTranslation(Location.x, Location.y, Location.z));
 
-             
-    float aspectRatio = static_cast<int>(windowContextHolderHolder->GetWindowWidth()) /
-                        static_cast<int>(windowContextHolderHolder->GetWindowHeight());
+           
+    DirectX::XMMATRIX ProjectionMatrix = Camera::GetInstance().GetProjectionMatrix();
 
-    DirectX::XMMATRIX ProjectionMatrix = DirectX::XMMatrixTranspose(
-                    DirectX::XMMatrixPerspectiveLH(DirectX::XMConvertToRadians(45),
-                     aspectRatio,1.0f, 200.0f));
+    DirectX::XMMATRIX ViewMatrix = Camera::GetInstance().GetViewMatrix();
 
-    DirectX::XMVECTOR cameraPosition = DirectX::XMVectorSet(0.0f, 0.0f, -5.0f, 0.0f); // Camera position
-    DirectX::XMVECTOR lookAtPosition = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f); // Point the camera is looking at
-    DirectX::XMVECTOR upDirection = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f); // Up direction
-
-    DirectX::XMMATRIX ViewMatrix = XMMatrixTranspose( DirectX::XMMatrixLookAtLH(cameraPosition, lookAtPosition, upDirection));
-    
     std::vector<DirectX::XMMATRIX> MatrixData = {
 
        WorldMatrix,
@@ -180,9 +248,6 @@ void CubeDrawable::Update(ID3D11DeviceContext* context, ID3D11Device* device, Wi
     };
 
     LightBuffer->Update(context, LightDatainfo);
-
-    std::cout << "Light position: x =" << uLightPosition.x << " Y=" << uLightPosition.y << " Z=" << uLightPosition.z << std::endl;
-
 
 
 }
@@ -206,8 +271,7 @@ void CubeDrawable::Draw(ID3D11DeviceContext* context, ID3D11Device* device, Wind
 
     UINT indexCount = static_cast<UINT>(CubeIndex.size());
 
-    context->DrawIndexed(indexCount, 0, 0);
-
+   context->DrawIndexed(indexCount, 0, 0);
 }
 
 

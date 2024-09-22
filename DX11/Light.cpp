@@ -1,27 +1,27 @@
 #include "Light.h"
+#include "Camera.h"
 
 
 
-std::vector<int> LightIndex = {
+std::vector<UINT> LightIndex = {
 
+    // Front face
+   0, 1, 2, 0, 2, 3,
+   // Back face
+   4,6,5,4,7,6,
+   // Left face
+   8, 10, 9, 8, 11, 10,
 
-      0, 1, 2,   0, 2, 3,
+   // Right face
+   12, 13, 14, 12, 14, 15,
+   // Top face
+   16, 18, 17, 16, 19, 18,
 
-      // Back face
-      4, 6, 5,   4, 7, 6,
+   // Bottom face
+   20, 21, 22, 20, 22, 23
 
-      // Left face
-      4, 5, 1,   4, 1, 0,
-
-      // Right face
-      3, 2, 6,   3, 6, 7,
-
-      // Top face
-      1, 5, 6,   1, 6, 2,
-
-      // Bottom face
-      4, 0, 3,   4, 3, 7,
 };
+
 
 
 
@@ -45,16 +45,41 @@ Light::Light(ID3D11Device* device, ID3D11DeviceContext* D3DDeviceContext, Window
 
     std::vector<Vertex> CubeData = {
 
-        { DirectX::XMFLOAT3A(-1.0f, -1.0f, -1.0f),  DirectX::XMFLOAT3A(0.0f, 0.0f, -1.0f),  BaseColor }, // Bottom-left-front (Red)
-        { DirectX::XMFLOAT3A(-1.0f,  1.0f, -1.0f),   DirectX::XMFLOAT3A(0.0f, 0.0f, -1.0f), BaseColor }, // Top-left-front (Green)
-        { DirectX::XMFLOAT3A(1.0f,  1.0f, -1.0f),    DirectX::XMFLOAT3A(0.0f, 0.0f, -1.0f), BaseColor }, // Top-right-front (Blue)
-        { DirectX::XMFLOAT3A(1.0f, -1.0f, -1.0f),    DirectX::XMFLOAT3A(0.0f, 0.0f, -1.0f), BaseColor }, // Bottom-right-front (Yellow)
+     // Front face
+    { DirectX::XMFLOAT3A(-1.0f, -1.0f, -1.0f),  DirectX::XMFLOAT3A(0.0f, 0.0f, -1.0f),  BaseColor }, // Bottom-left
+    { DirectX::XMFLOAT3A(-1.0f,  1.0f, -1.0f),  DirectX::XMFLOAT3A(0.0f, 0.0f, -1.0f),  BaseColor }, // Top-left
+    { DirectX::XMFLOAT3A(1.0f,  1.0f, -1.0f),  DirectX::XMFLOAT3A(0.0f, 0.0f, -1.0f),  BaseColor }, // Top-right
+    { DirectX::XMFLOAT3A(1.0f, -1.0f, -1.0f),  DirectX::XMFLOAT3A(0.0f, 0.0f, -1.0f),  BaseColor }, // Bottom-right
 
-        // Back face                                                                        
-        { DirectX::XMFLOAT3A(-1.0f, -1.0f,  1.0f),   DirectX::XMFLOAT3A(0.0f, 0.0f, 1.0f),  BaseColor }, // Bottom-left-back (Magenta)
-        { DirectX::XMFLOAT3A(-1.0f,  1.0f,  1.0f),   DirectX::XMFLOAT3A(0.0f, 0.0f, 1.0f),  BaseColor }, // Top-left-back (Cyan)
-        { DirectX::XMFLOAT3A(1.0f,  1.0f,  1.0f),    DirectX::XMFLOAT3A(0.0f, 0.0f, 1.0f),  BaseColor }, // Top-right-back (White)
-        { DirectX::XMFLOAT3A(1.0f, -1.0f,  1.0f),    DirectX::XMFLOAT3A(0.0f, 0.0f, 1.0f),  BaseColor }, // Bo
+    // Back face (Z = 1)
+    { DirectX::XMFLOAT3A(-1.0f, -1.0f, 1.0f),  DirectX::XMFLOAT3A(0.0f, 0.0f, 1.0f),  BaseColor },  // Bottom-left
+    { DirectX::XMFLOAT3A(-1.0f,  1.0f, 1.0f),  DirectX::XMFLOAT3A(0.0f, 0.0f, 1.0f),  BaseColor },  // Top-left
+    { DirectX::XMFLOAT3A(1.0f,  1.0f, 1.0f),  DirectX::XMFLOAT3A(0.0f, 0.0f, 1.0f),  BaseColor },  // Top-right
+    { DirectX::XMFLOAT3A(1.0f, -1.0f, 1.0f),  DirectX::XMFLOAT3A(0.0f, 0.0f, 1.0f),  BaseColor },  // Bottom-right
+
+    // Left face (X = -1)
+    { DirectX::XMFLOAT3A(-1.0f, -1.0f, -1.0f), DirectX::XMFLOAT3A(-1.0f, 0.0f, 0.0f), BaseColor },  // Bottom-front
+    { DirectX::XMFLOAT3A(-1.0f,  1.0f, -1.0f), DirectX::XMFLOAT3A(-1.0f, 0.0f, 0.0f), BaseColor },  // Top-front
+    { DirectX::XMFLOAT3A(-1.0f,  1.0f,  1.0f), DirectX::XMFLOAT3A(-1.0f, 0.0f, 0.0f), BaseColor },  // Top-back
+    { DirectX::XMFLOAT3A(-1.0f, -1.0f,  1.0f), DirectX::XMFLOAT3A(-1.0f, 0.0f, 0.0f), BaseColor },  // Bottom-back
+
+    // Right face (X = 1)
+    { DirectX::XMFLOAT3A(1.0f, -1.0f, -1.0f),  DirectX::XMFLOAT3A(1.0f, 0.0f, 0.0f),  BaseColor },  // Bottom-front
+    { DirectX::XMFLOAT3A(1.0f,  1.0f, -1.0f),  DirectX::XMFLOAT3A(1.0f, 0.0f, 0.0f),  BaseColor },  // Top-front
+    { DirectX::XMFLOAT3A(1.0f,  1.0f,  1.0f),  DirectX::XMFLOAT3A(1.0f, 0.0f, 0.0f),  BaseColor },  // Top-back
+    { DirectX::XMFLOAT3A(1.0f, -1.0f,  1.0f),  DirectX::XMFLOAT3A(1.0f, 0.0f, 0.0f),  BaseColor },  // Bottom-back
+
+    // Top face (Y = 1)
+    { DirectX::XMFLOAT3A(-1.0f, 1.0f, -1.0f),  DirectX::XMFLOAT3A(0.0f, 1.0f, 0.0f),  BaseColor },  // Front-left
+    { DirectX::XMFLOAT3A(1.0f, 1.0f, -1.0f),  DirectX::XMFLOAT3A(0.0f, 1.0f, 0.0f),  BaseColor },  // Front-right
+    { DirectX::XMFLOAT3A(1.0f, 1.0f,  1.0f),  DirectX::XMFLOAT3A(0.0f, 1.0f, 0.0f),  BaseColor },  // Back-right
+    { DirectX::XMFLOAT3A(-1.0f, 1.0f,  1.0f),  DirectX::XMFLOAT3A(0.0f, 1.0f, 0.0f),  BaseColor },  // Back-left
+
+    // Bottom face (Y = -1)
+    { DirectX::XMFLOAT3A(-1.0f, -1.0f, -1.0f), DirectX::XMFLOAT3A(0.0f, -1.0f, 0.0f), BaseColor },  // Front-left
+    { DirectX::XMFLOAT3A(1.0f, -1.0f, -1.0f), DirectX::XMFLOAT3A(0.0f, -1.0f, 0.0f), BaseColor },  // Front-right
+    { DirectX::XMFLOAT3A(1.0f, -1.0f,  1.0f), DirectX::XMFLOAT3A(0.0f, -1.0f, 0.0f), BaseColor },  // Back-right
+    { DirectX::XMFLOAT3A(-1.0f, -1.0f,  1.0f), DirectX::XMFLOAT3A(0.0f, -1.0f, 0.0f), BaseColor },  // Back-left
 
 
            
@@ -79,7 +104,7 @@ Light::Light(ID3D11Device* device, ID3D11DeviceContext* D3DDeviceContext, Window
 
     };
 
-
+    
     transformationConstantBuffer = std::make_shared<ConstantBuffer<DirectX::XMMATRIX>>(device, initialTransformations, "Vertex",0);
     AddBindable(transformationConstantBuffer);
 
@@ -133,25 +158,16 @@ void Light::Update(ID3D11DeviceContext* context, ID3D11Device* device, Window* w
 
     DirectX::XMMATRIX WorldPosition = DirectX::XMMatrixTranspose(
 
-        DirectX::XMMatrixScaling(2.0f, 2.0f, 2.0f)*
-        DirectX::XMMatrixRotationZ(updateRotation) *
-        DirectX::XMMatrixRotationX(updateRotation) *
+        DirectX::XMMatrixScaling(0.5f, 0.5f, 0.5f)*
+        DirectX::XMMatrixRotationZ(0) *
+        DirectX::XMMatrixRotationX(0) *
         DirectX::XMMatrixTranslation(Location.x, Location.y, Location.z));
 
 
-    float aspectRatio = static_cast<int>(windowContextHolderHolder->GetWindowWidth()) /
-        static_cast<int>(windowContextHolderHolder->GetWindowHeight());
+    DirectX::XMMATRIX ProjectionMatrix = Camera::GetInstance().GetProjectionMatrix();
 
-    DirectX::XMMATRIX ProjectionMatrix = DirectX::XMMatrixTranspose(
-        DirectX::XMMatrixPerspectiveLH(DirectX::XMConvertToRadians(60),
-            aspectRatio, 1.0f, 200.0f));
-
-
-    DirectX::XMVECTOR cameraPosition = DirectX::XMVectorSet(0.0f, 0.0f, -5.0f, 0.0f); // Camera position
-    DirectX::XMVECTOR lookAtPosition = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f); // Point the camera is looking at
-    DirectX::XMVECTOR upDirection = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f); // Up direction
-
-    DirectX::XMMATRIX ViewMatrix = XMMatrixTranspose(DirectX::XMMatrixLookAtLH(cameraPosition, lookAtPosition, upDirection));
+    DirectX::XMMATRIX ViewMatrix = Camera::GetInstance().GetViewMatrix();
+  
 
     std::vector< DirectX::XMMATRIX> MatrixData = {
 

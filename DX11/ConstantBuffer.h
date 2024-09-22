@@ -7,12 +7,11 @@ template<typename T>
 class ConstantBuffer : public Bindable {
   
 public:
+
     ConstantBuffer(ID3D11Device* device, std::vector<T> cbData, std::string ShaderToBind, UINT startslot) {
         HoldShaderToBindText = ShaderToBind;
         Startslot = startslot;
-       
-     
-       // UINT paddedSize = static_cast<UINT>((dataSize + 15) / 16 * 16); // Align to next multiple of 16 = static_cast<UINT>((dataSize + 15) / 16 * 16); // Align to next multiple of 16
+      
 
         D3D11_BUFFER_DESC ConstBufferDesc = {};
         ConstBufferDesc.ByteWidth = sizeof(T) * cbData.size();;
