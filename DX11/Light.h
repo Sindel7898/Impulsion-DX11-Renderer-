@@ -16,7 +16,7 @@
 class Light : public Drawable {
 
 public:
-    Light(ID3D11Device* device, ID3D11DeviceContext* D3DDeviceContext, Window* windowContext, DirectX::XMFLOAT3A location);
+    Light(ID3D11Device* device, ID3D11DeviceContext* D3DDeviceContext, Window* windowContext, DirectX::XMFLOAT3A location,int lightNumber);
 
     void Update();
     virtual void Draw() override;
@@ -38,6 +38,7 @@ private:
     float constantAtt = 1.0f;
     float linearAtt = 0.1f;  
     float quadraticAtt = 0.01f; 
+    int LightNumber;
 
     std::shared_ptr<ConstantBuffer<DirectX::XMMATRIX>> transformationConstantBuffer;
     

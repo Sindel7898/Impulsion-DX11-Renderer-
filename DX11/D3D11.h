@@ -48,8 +48,10 @@ private:
     Microsoft::WRL::ComPtr<ID3D11DepthStencilView> DepthSentcilView;
 
     std::vector<std::shared_ptr<CubeDrawable>> Cube;
-
+    std::vector<std::shared_ptr<Light>> Lights;
+    
     std::shared_ptr<Light> Light1;
+    std::shared_ptr<Light> Light2;
 
 
 

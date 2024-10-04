@@ -116,13 +116,17 @@ D3D11::D3D11(Window* windowApp){
 
         DirectX::XMFLOAT3A Lightlocation = { -2.0f,1.0f,1.0f };
 
-        DirectX::XMFLOAT3 Cubelocation = { 1.0f,1.0f,20.0f };
+        DirectX::XMFLOAT3A Lightlocation2 = { -30.0f,1.0f,1.0f };
 
-        Light1 = std::make_shared<Light>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, Lightlocation);
+        DirectX::XMFLOAT3 Cubelocation = { 1.0f,-10.0f,20.0f };
+
+       Light1 = std::make_shared<Light>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, Lightlocation,0);
+        //Light2 = std::make_shared <Light>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, Lightlocation2,1);
+
 
         float spacing = 4.0f;
         
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i <= 4; i++) {
 
             std::random_device rd;  // Obtain a random number from hardware
             std::mt19937 eng(rd()); // Seed the generator
@@ -131,17 +135,15 @@ D3D11::D3D11(Window* windowApp){
             std::uniform_int_distribution<> distr(-25, 25); // Define the range [1, 100]
 
             // Generate and output a random number
-            Cubelocation.x = distr(eng);
+            Lightlocation.x = distr(eng);
 
+            Lightlocation.z = distr(eng);
 
-            // Define the range
-            // Generate and output a random number
-            Cubelocation.y = distr(eng);
-
-            Cube.push_back(std::make_shared<CubeDrawable>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, Cubelocation, Light1.get())); // Adjust parameters as needed
-
+          Lights.push_back(std::make_shared<Light>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, Lightlocation, i));
         }
     
+        Cube.push_back(std::make_shared<CubeDrawable>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, Cubelocation, Lights)); // Adjust parameters as needed
+
         int visibleCubeCount = Cube.size();
         std::cout << "Total number of cubes on screen: " << visibleCubeCount << std::endl;
 
@@ -166,16 +168,28 @@ D3D11::D3D11(Window* windowApp){
         for (int i = 0; i < Cube.size(); i++) {
 
             Cube[i]->Update();
-
-
+         
             Cube[i]->Draw();
             
         }
+
+
+        for (int i = 0; i < Lights.size(); i++) {
+
+            Lights[i]->Update();
+
+            Lights[i]->Draw();
+
+        }
+
+       
      
 
-        Light1->Update();
+       /* Light1->Update();
+        Light2->Update();*/
 
-        Light1->Draw();
+        //Light1->Draw();
+        //Light2->Draw();
 
         ImGui::Render();
         ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());

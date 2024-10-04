@@ -25,10 +25,11 @@ std::vector<UINT> LightIndex = {
 
 
 
-Light::Light(ID3D11Device* device, ID3D11DeviceContext* d3dDeviceContext, Window* windowContextHolder, DirectX::XMFLOAT3A location)
+Light::Light(ID3D11Device* device, ID3D11DeviceContext* d3dDeviceContext, Window* windowContextHolder, DirectX::XMFLOAT3A location,int lightNumber)
     : Location(location), Device(device), 
       D3DDeviceContext(d3dDeviceContext), 
-      WindowContextHolder(windowContextHolder)
+      WindowContextHolder(windowContextHolder),
+      LightNumber(lightNumber)
 {
     //Vertex Data Containing informatoin for vertex positions and texture coords
    
@@ -138,7 +139,7 @@ Light::Light(ID3D11Device* device, ID3D11DeviceContext* d3dDeviceContext, Window
          {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT , 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
          {"NORMAL",    0, DXGI_FORMAT_R32G32B32_FLOAT , 0, 16, D3D11_INPUT_PER_VERTEX_DATA, 0},
 
-    };
+    }; 
 
     auto inputLayout = std::make_shared<InputLayout>(device, ied, std::size(ied), pixelShader.get());
     AddBindable(inputLayout);
@@ -153,16 +154,14 @@ Light::Light(ID3D11Device* device, ID3D11DeviceContext* d3dDeviceContext, Window
 // stuff to be updated every frame
 void Light::Update()
 {
+
     ImGui::Begin("Light Controls");
 
-    ImGui::SliderFloat3("Light Position", &Location.x, -40.0f, 40.0f);
-
-
-    ImGui::SliderFloat("constantAtt", &constantAtt, -10.0f, 10.0f);
-    ImGui::SliderFloat("linearAtt", &linearAtt, -10.0f, 10.0f);
-    ImGui::SliderFloat("quadraticAtt", &quadraticAtt, -10.0f, 10.0f);
-
-    ImGui::ColorPicker3("Light Color", &BaseColor.x);
+    ImGui::SliderFloat3(("Light " + std::to_string(LightNumber) + " Position").c_str(), &Location.x, -50.0f, 50.0f);
+    ImGui::SliderFloat(("Light " + std::to_string(LightNumber) + " constantAtt").c_str(), &constantAtt, -10.0f, 10.0f);
+    ImGui::SliderFloat(("Light " + std::to_string(LightNumber) + " linearAtt").c_str(), &linearAtt, -10.0f, 10.0f);
+    ImGui::SliderFloat(("Light " + std::to_string(LightNumber) + " quadraticAtt").c_str(), &quadraticAtt, -10.0f, 10.0f);
+    ImGui::ColorPicker3(("Light " + std::to_string(LightNumber) + " Color").c_str(), &BaseColor.x);
 
     ImGui::End();
 

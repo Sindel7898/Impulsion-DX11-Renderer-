@@ -23,8 +23,8 @@ std::vector<UINT> CubeIndex = {
 
 
 
-CubeDrawable::CubeDrawable(ID3D11Device* device, ID3D11DeviceContext* d3dDeviceContext, Window* windowContextHolder, DirectX::XMFLOAT3 location, Light* lightRef)
-    : Location(location), LightRef(lightRef), 
+CubeDrawable::CubeDrawable(ID3D11Device* device, ID3D11DeviceContext* d3dDeviceContext, Window* windowContextHolder, DirectX::XMFLOAT3 location, std::vector<std::shared_ptr<Light>>& Lights)
+    : Location(location), LightsRef(Lights),
       Device(device), D3DDeviceContext(d3dDeviceContext), 
       WindowContextHolder(windowContextHolder)
 {
@@ -254,17 +254,23 @@ void CubeDrawable::Update(){
     //update constant buffer data || LOOK A BIT MORE INTO THIS||
     Matrix->Update(D3DDeviceContext, MatrixData);
 
-   
 
-    std::vector<LightData> LightDatainfo = {
+    std::vector<LightData> LightDatainfo;
 
-        {LightRef->GetLocation(),
-         LightRef->GetColor(),
-         LightRef->GetconstantAtt(),
-         LightRef->GetlinearAtt(),
-         LightRef->GetquadraticAtt()}
-       
-    };
+    for (size_t i = 0; i < LightsRef.size(); i++)
+    {
+        LightData lightData = {
+
+            LightsRef[i]->GetLocation(),
+            LightsRef[i]->GetColor(),
+            LightsRef[i]->GetconstantAtt(),
+            LightsRef[i]->GetlinearAtt(),
+            LightsRef[i]->GetquadraticAtt(),
+        };
+
+        LightDatainfo.push_back(lightData);
+    }
+
 
     LightBuffer->Update(D3DDeviceContext, LightDatainfo);
 

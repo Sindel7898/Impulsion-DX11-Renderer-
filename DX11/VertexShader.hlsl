@@ -15,7 +15,7 @@ cbuffer Cbuf : register(b0)
 
 
 
-VS_OUTPUT VSMain(float3 Pos : POSITION, float3 normals : NORMAL, float4 Color : COLOR)
+VS_OUTPUT VSMain(float3 Pos : POSITION, float3 normals : NORMAL)
 {
     VS_OUTPUT output;
     

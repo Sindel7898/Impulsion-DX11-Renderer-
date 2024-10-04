@@ -19,7 +19,7 @@
 class CubeDrawable : public Drawable {
 
 public:
-    CubeDrawable(ID3D11Device* device, ID3D11DeviceContext* d3dDeviceContext, Window* windowContextHolder, DirectX::XMFLOAT3 location,Light* lightRef);
+    CubeDrawable(ID3D11Device* device, ID3D11DeviceContext* d3dDeviceContext, Window* windowContextHolder, DirectX::XMFLOAT3 location, std::vector<std::shared_ptr<Light>>& Lights);
 
 
     void Update();
@@ -43,6 +43,7 @@ public:
         float constantAtt;
         float linearAtt; 
         float quadraticAtt; 
+        float NumberOfLight;
     };
 
 
@@ -58,7 +59,7 @@ public:
 
 private: 
 
-    Light* LightRef;
+    std::vector<std::shared_ptr<Light>> LightsRef;
 
     ID3D11Device* Device;
     ID3D11DeviceContext* D3DDeviceContext;
