@@ -122,7 +122,7 @@ D3D11::D3D11(Window* windowApp){
 
         float spacing = 4.0f;
         
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 1; i++) {
 
             std::random_device rd;  // Obtain a random number from hardware
             std::mt19937 eng(rd()); // Seed the generator
@@ -138,7 +138,7 @@ D3D11::D3D11(Window* windowApp){
             // Generate and output a random number
             Cubelocation.y = distr(eng);
 
-            Cube.push_back(std::make_shared<CubeDrawable>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, Cubelocation)); // Adjust parameters as needed
+            Cube.push_back(std::make_shared<CubeDrawable>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, Cubelocation, Light1.get())); // Adjust parameters as needed
 
         }
     
@@ -151,46 +151,31 @@ D3D11::D3D11(Window* windowApp){
 
     void D3D11::Update() {
 
+        ClearBuffer(0.0f, 0.0f, 0.0f);
+
         ImGui_ImplDX11_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-
-        ImGui::Begin("Hello, ImGui!");
-        ImGui::Text("This is a window with DirectX 11 and GLFW.");
-        ImGui::End();
-
-
-        ImGui::Begin("Background Color Picker");
-        ImGui::ColorEdit3("Background Color", clearColor);  
-        ImGui::End();
-
         ImGui::Begin("FPS Display");
         ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
         ImGui::End();
-
-        ClearBuffer(clearColor[0], clearColor[1], clearColor[2]);
-
        
 
-       
-        rotaion += 0.02;
-
+      
         for (int i = 0; i < Cube.size(); i++) {
 
-            Cube[i]->Update(D3DDeviceContext.Get(), D3DDevice.Get(), windowContextHolder, rotaion, Light1->GetLocation(),Light1->GetColor());
+            Cube[i]->Update();
 
 
-            Cube[i]->Draw(D3DDeviceContext.Get(), D3DDevice.Get(), windowContextHolder);
-            
+            Cube[i]->Draw();
             
         }
-
      
 
-        Light1->Update(D3DDeviceContext.Get(), D3DDevice.Get(), windowContextHolder, rotaion);
+        Light1->Update();
 
-        Light1->Draw(D3DDeviceContext.Get(), D3DDevice.Get(), windowContextHolder);
+        Light1->Draw();
 
         ImGui::Render();
         ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());

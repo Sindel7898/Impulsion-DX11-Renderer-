@@ -7,7 +7,10 @@ template<typename T>
 class VertexBuffer : public Bindable {
 public :
 
-	VertexBuffer(ID3D11Device* Device, std::vector<T> VertexData) {
+
+	VertexBuffer(ID3D11Device* Device, std::vector<T> VertexData, int numofbuffers, int layoutnum) {
+        NumberofBufferCreated = numofbuffers;
+        VertexLayOutNumber = layoutnum;
 
         vertexBufferCount = 0;
         D3D11_BUFFER_DESC VertexBufferDesc = {}; 
@@ -36,7 +39,7 @@ public :
         UINT Stride = sizeof(T) * 1;
         UINT Offset = 0;
 
-        context->IASetVertexBuffers(0, 1, vVertexBuffer.GetAddressOf(), &Stride, &Offset);
+        context->IASetVertexBuffers(VertexLayOutNumber, NumberofBufferCreated, vVertexBuffer.GetAddressOf(), &Stride, &Offset);
     }
 
 
@@ -45,4 +48,6 @@ private:
     Microsoft::WRL::ComPtr<ID3D11Buffer> vVertexBuffer;
      int vertexBufferCount;
 
+     int NumberofBufferCreated;
+     int VertexLayOutNumber;
 };

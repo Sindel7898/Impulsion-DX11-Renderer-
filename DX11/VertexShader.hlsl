@@ -1,9 +1,7 @@
 struct VS_OUTPUT
 {
     float4 Pos : SV_POSITION;
-    float3 Normal : NORMAL;
-    float4 Color : COLOR;
-    
+    float3 Normal : NORMAL;    
     
 };
 
@@ -30,7 +28,6 @@ VS_OUTPUT VSMain(float3 Pos : POSITION, float3 normals : NORMAL, float4 Color : 
     
     output.Normal = normalize(mul(float4(normals,0.0f), WorldMatrix));
 
-    output.Color = Color;
    
     return output;
 

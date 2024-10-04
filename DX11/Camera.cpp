@@ -81,6 +81,16 @@ void Camera::Update(float deltaTime, GLFWwindow* window)
 		position.z -= right.z * cameraSpeed;
 	}
 
+	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+
+		position.y += cameraSpeed ;
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_LEFT_ALT) == GLFW_PRESS) {
+
+		position.y -= cameraSpeed;
+	}
+
 
 	float xOffset = (float)(mouseX - lastMouseX);
 	float yOffset = (float)(mouseY - lastMouseY);

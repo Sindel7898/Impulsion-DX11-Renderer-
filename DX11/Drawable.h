@@ -21,7 +21,7 @@ public:
 	}
 
 
-	virtual void Draw(ID3D11DeviceContext* context, ID3D11Device* device, Window* windowApp) = 0;
+	virtual void Draw() = 0;
 
 
 	void AddBindable(std::shared_ptr<Bindable> bindable) {

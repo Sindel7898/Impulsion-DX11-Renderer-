@@ -36,8 +36,6 @@ public:
     Window* windowContextHolder;
 
     
-    float rotaion = 1.0f;
-
 
 private:
 
@@ -50,6 +48,7 @@ private:
     Microsoft::WRL::ComPtr<ID3D11DepthStencilView> DepthSentcilView;
 
     std::vector<std::shared_ptr<CubeDrawable>> Cube;
+
     std::shared_ptr<Light> Light1;
 
 

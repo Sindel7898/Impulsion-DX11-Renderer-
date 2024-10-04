@@ -23,8 +23,10 @@ std::vector<UINT> CubeIndex = {
 
 
 
-CubeDrawable::CubeDrawable(ID3D11Device* device, ID3D11DeviceContext* D3DDeviceContext, Window* windowContextHolder, DirectX::XMFLOAT3 location)
-    : Location(location)
+CubeDrawable::CubeDrawable(ID3D11Device* device, ID3D11DeviceContext* d3dDeviceContext, Window* windowContextHolder, DirectX::XMFLOAT3 location, Light* lightRef)
+    : Location(location), LightRef(lightRef), 
+      Device(device), D3DDeviceContext(d3dDeviceContext), 
+      WindowContextHolder(windowContextHolder)
 {
  
    
@@ -113,7 +115,7 @@ CubeDrawable::CubeDrawable(ID3D11Device* device, ID3D11DeviceContext* D3DDeviceC
 
 
 
-     auto vertexBuffer =  std::make_shared<VertexBuffer<Vertex>>(device, CubeData);
+     auto vertexBuffer =  std::make_shared<VertexBuffer<Vertex>>(device, CubeData,1,0);
      AddBindable(vertexBuffer);
      ///////////////////////////////////////////////////////////////////////////////////////////
      
@@ -151,7 +153,7 @@ CubeDrawable::CubeDrawable(ID3D11Device* device, ID3D11DeviceContext* D3DDeviceC
    ID3D11ShaderResourceView* textureView = nullptr;
 
   
-   DirectX::CreateWICTextureFromFile(device, D3DDeviceContext, L"Texture/bunny.png", &texture, &textureView);
+   DirectX::CreateWICTextureFromFile(device, D3DDeviceContext, L"Texture/wood.png", &texture, &textureView);
    
    D3D11_SAMPLER_DESC samplerDesc = {};
 
@@ -195,7 +197,7 @@ CubeDrawable::CubeDrawable(ID3D11Device* device, ID3D11DeviceContext* D3DDeviceC
         {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
         {"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 16, D3D11_INPUT_PER_VERTEX_DATA, 0},
         {"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 32, D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 48, D3D11_INPUT_PER_VERTEX_DATA, 0}
+        {"COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0 , 48, D3D11_INPUT_PER_VERTEX_DATA, 0}
 
 
    };
@@ -211,16 +213,28 @@ CubeDrawable::CubeDrawable(ID3D11Device* device, ID3D11DeviceContext* D3DDeviceC
 
 
 // stuff to be updated every frame
-void CubeDrawable::Update(ID3D11DeviceContext* context, ID3D11Device* device, Window* windowApp, float updateRotation, 
-    DirectX::XMFLOAT3A uLightPosition,
-    DirectX::XMFLOAT4 uLightColor){
+void CubeDrawable::Update(){
+
+    ImGui::Begin("Cube Controls");
+
+    ImGui::SliderFloat3("Cube Position", &Location.x, -50.0f, 50.0f);
+
+
+    ImGui::SliderFloat3("Scale", &Scaling.x, -50.0f, 50.0f);
+    ImGui::SliderFloat3("Rotation", &Rotation.x, -360.0f, 360.0f);
+
+
+    ImGui::End();
+
 
 
     DirectX::XMMATRIX WorldMatrix = DirectX::XMMatrixTranspose(
       
-        DirectX::XMMatrixScaling(1.0f, 1.0f, 1.0f) *
-        DirectX::XMMatrixRotationZ(updateRotation) *
-        DirectX::XMMatrixRotationX(0) *
+        DirectX::XMMatrixScaling(Scaling.x, Scaling.y, Scaling.z) *
+        DirectX::XMMatrixRotationX(Rotation.x)*
+        DirectX::XMMatrixRotationY(Rotation.y)*
+        DirectX::XMMatrixRotationZ(Rotation.z) *
+
         DirectX::XMMatrixTranslation(Location.x, Location.y, Location.z));
 
            
@@ -238,40 +252,44 @@ void CubeDrawable::Update(ID3D11DeviceContext* context, ID3D11Device* device, Wi
  
 
     //update constant buffer data || LOOK A BIT MORE INTO THIS||
-    Matrix->Update(context, MatrixData);
+    Matrix->Update(D3DDeviceContext, MatrixData);
 
-    
+   
+
     std::vector<LightData> LightDatainfo = {
 
-        {uLightPosition,uLightColor}
-
+        {LightRef->GetLocation(),
+         LightRef->GetColor(),
+         LightRef->GetconstantAtt(),
+         LightRef->GetlinearAtt(),
+         LightRef->GetquadraticAtt()}
+       
     };
 
-    LightBuffer->Update(context, LightDatainfo);
-
+    LightBuffer->Update(D3DDeviceContext, LightDatainfo);
 
 }
 
-void CubeDrawable::Draw(ID3D11DeviceContext* context, ID3D11Device* device, Window* windowApp)  {
+void CubeDrawable::Draw()  {
 
-    Bind(context);//Bind all the bindables to the object 
+    Bind(D3DDeviceContext);//Bind all the bindables to the object 
 
-    context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    D3DDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     D3D11_VIEWPORT vp{};
 
-    vp.Width = static_cast<float>(windowApp->GetWindowWidth());
-    vp.Height = static_cast<float>(windowApp->GetWindowHeight());
+    vp.Width = static_cast<float>(WindowContextHolder->GetWindowWidth());
+    vp.Height = static_cast<float>(WindowContextHolder->GetWindowHeight());
     vp.MaxDepth = 1;
     vp.MinDepth = 0;
     vp.TopLeftX = 0;
     vp.TopLeftY = 0;
 
-    context->RSSetViewports(1, &vp);
+    D3DDeviceContext->RSSetViewports(1, &vp);
 
     UINT indexCount = static_cast<UINT>(CubeIndex.size());
 
-   context->DrawIndexed(indexCount, 0, 0);
+    D3DDeviceContext->DrawIndexed(indexCount, 0, 0);
 }
 
 
