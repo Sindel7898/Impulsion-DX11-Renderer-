@@ -20,7 +20,7 @@ bool Window::Initialize()
    
     glfwWindowHint(GLFW_SCALE_TO_MONITOR, GLFW_FALSE);
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-
+   // glfwSwapInterval(0);
     _window = glfwCreateWindow(_width, _height, WindowTitle.data(), nullptr, nullptr);
 
     

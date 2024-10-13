@@ -126,7 +126,7 @@ D3D11::D3D11(Window* windowApp){
 
         float spacing = 4.0f;
         
-        for (int i = 0; i <= 4; i++) {
+        for (int i = 0; i <= 1; i++) {
 
             std::random_device rd;  // Obtain a random number from hardware
             std::mt19937 eng(rd()); // Seed the generator
@@ -181,15 +181,6 @@ D3D11::D3D11(Window* windowApp){
             Lights[i]->Draw();
 
         }
-
-       
-     
-
-       /* Light1->Update();
-        Light2->Update();*/
-
-        //Light1->Draw();
-        //Light2->Draw();
 
         ImGui::Render();
         ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());

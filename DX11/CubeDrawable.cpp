@@ -39,8 +39,6 @@ CubeDrawable::CubeDrawable(ID3D11Device* device, ID3D11DeviceContext* d3dDeviceC
         DirectX::XMFLOAT3A normal;
         DirectX::XMFLOAT2A Texture;
         DirectX::XMFLOAT3A color;
-
-
     };
 
     DirectX::XMFLOAT3A BaseColor = { 1.0f,1.0f,1.0f };
@@ -120,60 +118,60 @@ CubeDrawable::CubeDrawable(ID3D11Device* device, ID3D11DeviceContext* d3dDeviceC
      ///////////////////////////////////////////////////////////////////////////////////////////
      
   //INITIALMATIXDATA////////////////////////////////////////////////////////////////////////////
-     DirectX::XMMATRIX WorldPosition = DirectX::XMMatrixIdentity();
+     DirectX::XMMATRIX WorldMatrix = DirectX::XMMatrixIdentity();
      DirectX::XMMATRIX projectionmatrix = DirectX::XMMatrixIdentity();
      DirectX::XMMATRIX viewMatrix = DirectX::XMMatrixIdentity();
 
+     DirectX::XMFLOAT3 CameraPosition = Camera::GetInstance().GetPosition();
+     float MatrixDataCBPadding1 = 0.0f;
 
-     std::vector<DirectX::XMMATRIX> initialTransformations = {
+     VERTEXDATA vertexDatainfo = {
 
-          WorldPosition,
-          projectionmatrix,
-          viewMatrix
+        WorldMatrix,
+        projectionmatrix,
+        viewMatrix,
+        CameraPosition,
+        MatrixDataCBPadding1
 
-       };
+     };
+
+     std::vector<VERTEXDATA> VertexData;
+     VertexData.push_back(vertexDatainfo);
 
 
-   Matrix = std::make_shared<ConstantBuffer<DirectX::XMMATRIX>>(device, initialTransformations, "Vertex",0);
+
+   Matrix = std::make_shared<ConstantBuffer<VERTEXDATA>>(device, VertexData, "Vertex",0);
    AddBindable(Matrix);
    
 
 
-   std::vector<LightData> LightDatainfo = {
+   std::vector<LightData> LightDatainfo;
 
-      { DirectX::XMFLOAT3A(0.0f,0.0f,0.0f), DirectX::XMFLOAT4(0.0f,0.0f,0.0f,0.0f)}
+   for (size_t i = 0; i < LightsRef.size(); i++)
+   {
+       LightData lightData = {
 
-   };
+            LightsRef[i]->GetLocation(),
+            LightsRef[i]->GetDirection(),
+
+            LightsRef[i]->GetColor(),
+            LightsRef[i]->GetConeDetails(),
+
+            LightsRef[i]->GetAttenuition()
+       };
+
+       LightDatainfo.push_back(lightData);
+   }
 
    LightBuffer = std::make_shared<ConstantBuffer<LightData>>(device, LightDatainfo, "Pixel",0);
    AddBindable(LightBuffer);
 
-   ID3D11Resource* texture = nullptr;
- 
-   ID3D11ShaderResourceView* textureView = nullptr;
 
-  
-   DirectX::CreateWICTextureFromFile(device, D3DDeviceContext, L"Texture/wood.png", &texture, &textureView);
-   
-   D3D11_SAMPLER_DESC samplerDesc = {};
+   auto texture = std::make_shared<Texture>(Device, D3DDeviceContext,0, L"Texture/brick1.dds");
+   AddBindable(texture);
 
-   samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR; // Linear filtering
-   samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;    // Wrap mode for U
-   samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;    // Wrap mode for V
-   samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;    // Wrap mode for W
-   samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
-   samplerDesc.MinLOD = 0;
-   samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
-   samplerDesc.MipLODBias = 0;
-   samplerDesc.MaxAnisotropy = 1;
-
-   ID3D11SamplerState* samplerState;
-
-   device->CreateSamplerState(&samplerDesc, &samplerState);
-   D3DDeviceContext->PSSetSamplers(0, 1, &samplerState);
-
-   D3DDeviceContext->PSSetShaderResources(0, 1, &textureView);
-
+   auto NormalMap = std::make_shared<Texture>(Device, D3DDeviceContext, 1,L"Texture/BrickNormal.png");
+   AddBindable(NormalMap);
    /// Create index Buffer/////////////////////////////////////////////////////////////////
 
    auto indexBuffer = std::make_shared<IndexBuffer>(device, CubeIndex);
@@ -242,30 +240,41 @@ void CubeDrawable::Update(){
 
     DirectX::XMMATRIX ViewMatrix = Camera::GetInstance().GetViewMatrix();
 
-    std::vector<DirectX::XMMATRIX> MatrixData = {
+    DirectX::XMFLOAT3 CameraPosition = Camera::GetInstance().GetPosition();
+
+    float MatrixDataCBPadding1 = 0.0f;
+
+    VERTEXDATA vertexDatainfo = {
 
        WorldMatrix,
        ProjectionMatrix,
-       ViewMatrix
+       ViewMatrix,
+       CameraPosition,
+       MatrixDataCBPadding1
 
     };
- 
+
+    std::vector<VERTEXDATA> VertexData;
+    VertexData.push_back(vertexDatainfo);
 
     //update constant buffer data || LOOK A BIT MORE INTO THIS||
-    Matrix->Update(D3DDeviceContext, MatrixData);
+    Matrix->Update(D3DDeviceContext, VertexData);
 
 
     std::vector<LightData> LightDatainfo;
+    DirectX::XMINT3 Padding;
 
     for (size_t i = 0; i < LightsRef.size(); i++)
     {
         LightData lightData = {
 
-            LightsRef[i]->GetLocation(),
-            LightsRef[i]->GetColor(),
-            LightsRef[i]->GetconstantAtt(),
-            LightsRef[i]->GetlinearAtt(),
-            LightsRef[i]->GetquadraticAtt(),
+             LightsRef[i]->GetLocation(),
+             LightsRef[i]->GetDirection(),
+
+             LightsRef[i]->GetColor(),
+             LightsRef[i]->GetConeDetails(),
+             LightsRef[i]->GetAttenuition(),
+             LightsRef[i]->GetLightType(),
         };
 
         LightDatainfo.push_back(lightData);

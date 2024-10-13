@@ -22,7 +22,7 @@ public:
     DirectX::XMMATRIX GetProjectionMatrix() const;
 
     // Get the position of the camera
-    DirectX::XMFLOAT3 GetPosition() const;
+    DirectX::XMFLOAT3 GetPosition();
 
 private:
 

@@ -14,6 +14,6 @@ cbuffer LightBuffer : register(b0)
 
 float4 PSMain(VS_OUTPUT input) : SV_TARGET
 {
-    
+  
     return color;
 }

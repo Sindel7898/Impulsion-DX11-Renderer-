@@ -134,7 +134,7 @@ DirectX::XMMATRIX Camera::GetProjectionMatrix() const {
 }
 
 // Get the camera's position in world space
-DirectX::XMFLOAT3 Camera::GetPosition() const {
+DirectX::XMFLOAT3 Camera::GetPosition() {
 
 	return position;
 }

@@ -158,12 +158,33 @@ void Light::Update()
     ImGui::Begin("Light Controls");
 
     ImGui::SliderFloat3(("Light " + std::to_string(LightNumber) + " Position").c_str(), &Location.x, -50.0f, 50.0f);
-    ImGui::SliderFloat(("Light " + std::to_string(LightNumber) + " constantAtt").c_str(), &constantAtt, -10.0f, 10.0f);
-    ImGui::SliderFloat(("Light " + std::to_string(LightNumber) + " linearAtt").c_str(), &linearAtt, -10.0f, 10.0f);
-    ImGui::SliderFloat(("Light " + std::to_string(LightNumber) + " quadraticAtt").c_str(), &quadraticAtt, -10.0f, 10.0f);
-    ImGui::ColorPicker3(("Light " + std::to_string(LightNumber) + " Color").c_str(), &BaseColor.x);
+    //ImGui::SliderFloat3(("Light " + std::to_string(LightNumber) + " Attenition").c_str(), &Attenuition.x, -10.0f, 10.0f);
+    ImGui::SliderFloat2(("Light " + std::to_string(LightNumber) + " Cone Details").c_str(), &ConeDetails.x, 0.0f, 100.0f);
+    //ImGui::SliderFloat(("Light " + std::to_string(LightNumber) + " quadraticAtt").c_str(), &quadraticAtt, -10.0f, 10.0f);
+    ImGui::ColorEdit3(("Light " + std::to_string(LightNumber) + " Color").c_str(), &BaseColor.x);
+   
+    
+    const char* items[] = { "Point Light", "Spot Light"};
 
-    ImGui::End();
+    int selectedOption = static_cast<int>(LightType.x);  // Convert LightType.x to an integer for the combo
+
+    if (ImGui::Combo(("Select Option" + std::to_string(LightNumber)).c_str(), reinterpret_cast<int*>(&selectedOption), items, IM_ARRAYSIZE(items))) {
+
+        if (selectedOption == 0) {
+            LightType.x = 0.0f;  // Point light
+        }
+        else if (selectedOption == 1) {
+            LightType.x = 1.0f;  // Spot light
+        }
+      
+
+        ImGui::Text("Selected option: %s", items[selectedOption]);
+
+    }
+
+    ImGui::Text("Current Light Type: %f", LightType.x);
+
+        ImGui::End();
 
 
     DirectX::XMMATRIX WorldPosition = DirectX::XMMatrixTranspose(

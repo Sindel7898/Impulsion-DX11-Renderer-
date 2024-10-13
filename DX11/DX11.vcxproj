@@ -177,6 +177,7 @@
     <ClInclude Include="MACROS.h" />
     <ClInclude Include="PixelShader.h" />
     <ClInclude Include="CubeDrawable.h" />
+    <ClInclude Include="Texture.h" />
     <ClInclude Include="VertexShader.h" />
     <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="Window.h" />

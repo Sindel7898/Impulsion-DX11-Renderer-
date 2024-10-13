@@ -24,27 +24,30 @@ public:
 
 
    FORCEINLINE DirectX::XMFLOAT3A GetLocation()  { return Location; }
-   FORCEINLINE  DirectX::XMFLOAT4 GetColor() const { return BaseColor; }
+   FORCEINLINE DirectX::XMFLOAT3A GetDirection() { return Direction; }
+   FORCEINLINE  DirectX::XMFLOAT4A GetColor() const { return BaseColor; }
+   FORCEINLINE  DirectX::XMFLOAT2A GetConeDetails() const { return ConeDetails; }
+   FORCEINLINE  DirectX::XMFLOAT2A GetLightType() const { return LightType; }
 
-   FORCEINLINE float GetconstantAtt() { return constantAtt; }
-   FORCEINLINE float GetlinearAtt() { return linearAtt; }
-   FORCEINLINE float GetquadraticAtt() { return quadraticAtt; }
+
+
+   FORCEINLINE DirectX::XMFLOAT3A  GetAttenuition() { return Attenuition; }
 
    
 private:
+
     DirectX::XMFLOAT3A Location;
-    DirectX::XMFLOAT4 BaseColor = { 1.0f,1.0f,1.0f,1.0f };
-
-    float constantAtt = 1.0f;
-    float linearAtt = 0.1f;  
-    float quadraticAtt = 0.01f; 
-    int LightNumber;
-
+    DirectX::XMFLOAT3A Direction{ 0.0f,1.0f,0.0f };
+    DirectX::XMFLOAT4A BaseColor = { 1.0f,1.0f,1.0f,1.0f };
+    DirectX::XMFLOAT2A ConeDetails = { 30.0f,50.0f };
+    DirectX::XMFLOAT3A Attenuition{ 0.5f,0.125f,0.0f };
+    int  LightNumber;
     std::shared_ptr<ConstantBuffer<DirectX::XMMATRIX>> transformationConstantBuffer;
     
     std::shared_ptr<ConstantBuffer<DirectX::XMFLOAT4>> LightConstantBuffer;
+    
+    DirectX::XMFLOAT2A LightType{ 0.0f,0.0f };
 
-   
     ID3D11Device* Device;
     ID3D11DeviceContext* D3DDeviceContext;
     Window* WindowContextHolder;

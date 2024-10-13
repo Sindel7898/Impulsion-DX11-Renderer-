@@ -11,10 +11,10 @@
 #include <wrl/client.h>
 #include <DirectXMath.h>
 #include "ConstantBuffer.h"
-#include <WICTextureLoader.h>
 #include <iostream>
 #include"Camera.h"
 #include "Light.h"
+#include "Texture.h"
 
 class CubeDrawable : public Drawable {
 
@@ -27,23 +27,41 @@ public:
     virtual void Draw() override;
 
 
+
     DirectX::XMFLOAT3 Location;
     DirectX::XMFLOAT3 Scaling = { 30.0f,1.0f,30.0f };
     DirectX::XMFLOAT3 Rotation = { 0.0f,0.0f,00.0f };
 
 
+    struct Vertex {
 
+        DirectX::XMFLOAT3A position;   // Vertex position
+        DirectX::XMFLOAT3A normal;
+        DirectX::XMFLOAT2A texCoord;
+        DirectX::XMFLOAT3A color;
+        
+
+    };
+
+
+    struct VERTEXDATA {
+        DirectX::XMMATRIX  WorldMatrix;
+        DirectX::XMMATRIX  ProjectionMatrix;
+        DirectX::XMMATRIX  ViewMatrix;
+        DirectX::XMFLOAT3 CameraPosition;
+        float MatrixDataCBPadding1;
+    };
 
 
     struct LightData {
 
         DirectX::XMFLOAT3A  LightPosition;
-        DirectX::XMFLOAT4 LightColor;
-        //Attenuition
-        float constantAtt;
-        float linearAtt; 
-        float quadraticAtt; 
-        float NumberOfLight;
+        DirectX::XMFLOAT3A  LightDirection;
+        DirectX::XMFLOAT4A LightColor;
+        DirectX::XMFLOAT2A ConeParams;
+        DirectX::XMFLOAT3A Attenuition;
+        DirectX::XMFLOAT2A LightType;
+
     };
 
 
@@ -52,7 +70,7 @@ public:
     float linearAtt = 0.1f;   // Linear attenuation factor
     float quadraticAtt = 0.01f; // Quadratic attenuation factor
 
-    std::shared_ptr<ConstantBuffer<DirectX::XMMATRIX>> Matrix;
+    std::shared_ptr<ConstantBuffer<VERTEXDATA>> Matrix;
 
     std::shared_ptr<ConstantBuffer<LightData>> LightBuffer;
 
