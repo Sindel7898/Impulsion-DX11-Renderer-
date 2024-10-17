@@ -32,8 +32,9 @@ CubeDrawable::CubeDrawable(ID3D11Device* device, ID3D11DeviceContext* d3dDeviceC
    
     windowContextHolderHolder = windowContextHolder;
    
-    //Vertex Data Containing informatoin for vertex positions and texture coords
-    struct Vertex {
+   
+    
+        struct Vertex {
 
         DirectX::XMFLOAT3A position;   // Vertex position
         DirectX::XMFLOAT3A normal;
@@ -46,12 +47,12 @@ CubeDrawable::CubeDrawable(ID3D11Device* device, ID3D11DeviceContext* d3dDeviceC
     std::vector<Vertex> CubeData = {
 
         // Front face
-       { DirectX::XMFLOAT3A(-1.0f, -1.0f, -1.0f), DirectX::XMFLOAT3A(0.0f, 0.0f, -0.0f), DirectX::XMFLOAT2A(0.0f, 1.0f), BaseColor }, // Bottom-left
+      { DirectX::XMFLOAT3A(-1.0f, -1.0f, -1.0f), DirectX::XMFLOAT3A(0.0f, 0.0f, -0.0f), DirectX::XMFLOAT2A(0.0f, 1.0f), BaseColor }, // Bottom-left
        { DirectX::XMFLOAT3A(-1.0f,  1.0f, -1.0f), DirectX::XMFLOAT3A(0.0f, 0.0f, -0.0f), DirectX::XMFLOAT2A(0.0f, 0.0f),  BaseColor }, // Top-left
        { DirectX::XMFLOAT3A(1.0f,  1.0f, -1.0f),  DirectX::XMFLOAT3A(0.0f, 0.0f, -0.0f), DirectX::XMFLOAT2A(1.0f, 0.0f), BaseColor }, // Top-right
        { DirectX::XMFLOAT3A(1.0f, -1.0f, -1.0f),  DirectX::XMFLOAT3A(0.0f, 0.0f, -0.0f), DirectX::XMFLOAT2A(1.0f, 1.0f),  BaseColor }, // Bottom-right
 
-       // Back face (Z = 1)                       
+      // Back face (Z = 1)                       
        { DirectX::XMFLOAT3A(-1.0f, -1.0f, 1.0f),  DirectX::XMFLOAT3A(0.0f, 0.0f, -0.0f), DirectX::XMFLOAT2A(1.0f, 1.0f), BaseColor },  // Bottom-left
        { DirectX::XMFLOAT3A(-1.0f,  1.0f, 1.0f),  DirectX::XMFLOAT3A(0.0f, 0.0f, -0.0f), DirectX::XMFLOAT2A(1.0f, 0.0f), BaseColor },  // Top-left
        { DirectX::XMFLOAT3A(1.0f,  1.0f, 1.0f),   DirectX::XMFLOAT3A(0.0f, 0.0f, -0.0f), DirectX::XMFLOAT2A(0.0f, 0.0f), BaseColor },  // Top-right
@@ -65,7 +66,7 @@ CubeDrawable::CubeDrawable(ID3D11Device* device, ID3D11DeviceContext* d3dDeviceC
        // Right face (X = 1)                     
        { DirectX::XMFLOAT3A(1.0f, -1.0f, -1.0f),  DirectX::XMFLOAT3A(0.0f, 0.0f, -0.0f),  DirectX::XMFLOAT2A(0.0f, 1.0f), BaseColor },  // Bottom-front
        { DirectX::XMFLOAT3A(1.0f,  1.0f, -1.0f),  DirectX::XMFLOAT3A(0.0f, 0.0f, -0.0f),  DirectX::XMFLOAT2A(0.0f, 0.0f), BaseColor },  // Top-front
-       { DirectX::XMFLOAT3A(1.0f,  1.0f,  1.0f),  DirectX::XMFLOAT3A(0.0f, 0.0f, -0.0f),  DirectX::XMFLOAT2A(1.0f, 0.0f), BaseColor },  // Top-back
+      { DirectX::XMFLOAT3A(1.0f,  1.0f,  1.0f),  DirectX::XMFLOAT3A(0.0f, 0.0f, -0.0f),  DirectX::XMFLOAT2A(1.0f, 0.0f), BaseColor },  // Top-back
        { DirectX::XMFLOAT3A(1.0f, -1.0f,  1.0f),  DirectX::XMFLOAT3A(0.0f, 0.0f, -0.0f),  DirectX::XMFLOAT2A(1.0f, 1.0f), BaseColor },  // Bottom-back
                                                   
        // Top face (Y = 1)                      
@@ -79,9 +80,6 @@ CubeDrawable::CubeDrawable(ID3D11Device* device, ID3D11DeviceContext* d3dDeviceC
        { DirectX::XMFLOAT3A(1.0f, -1.0f, -1.0f),  DirectX::XMFLOAT3A(0.0f, 0.0f, -0.0f), DirectX::XMFLOAT2A(1.0f, 1.0f), BaseColor },  // Front-right
        { DirectX::XMFLOAT3A(1.0f, -1.0f,  1.0f),  DirectX::XMFLOAT3A(0.0f, 0.0f, -0.0f), DirectX::XMFLOAT2A(1.0f, 0.0f), BaseColor },  // Back-right
        { DirectX::XMFLOAT3A(-1.0f, -1.0f,  1.0f), DirectX::XMFLOAT3A(0.0f, 0.0f, -0.0f), DirectX::XMFLOAT2A(0.0f, 1.0f), BaseColor },  // Back-left
-
-
-
     };
 
 
@@ -112,12 +110,13 @@ CubeDrawable::CubeDrawable(ID3D11Device* device, ID3D11DeviceContext* d3dDeviceC
     }
 
 
-
-     auto vertexBuffer =  std::make_shared<VertexBuffer<Vertex>>(device, CubeData,1,0);
+    
+    
+      auto vertexBuffer =  std::make_shared<VertexBuffer<Vertex>>(device, CubeData,1,0);
      AddBindable(vertexBuffer);
      ///////////////////////////////////////////////////////////////////////////////////////////
      
-  //INITIALMATIXDATA////////////////////////////////////////////////////////////////////////////
+    //INITIALMATIXDATA////////////////////////////////////////////////////////////////////////////
      DirectX::XMMATRIX WorldMatrix = DirectX::XMMatrixIdentity();
      DirectX::XMMATRIX projectionmatrix = DirectX::XMMatrixIdentity();
      DirectX::XMMATRIX viewMatrix = DirectX::XMMatrixIdentity();
@@ -125,7 +124,9 @@ CubeDrawable::CubeDrawable(ID3D11Device* device, ID3D11DeviceContext* d3dDeviceC
      DirectX::XMFLOAT3 CameraPosition = Camera::GetInstance().GetPosition();
      float MatrixDataCBPadding1 = 0.0f;
 
-     VERTEXDATA vertexDatainfo = {
+     std::vector<VERTEXDATA> vertexDatainfo;
+
+     VERTEXDATA VertexData = {
 
         WorldMatrix,
         projectionmatrix,
@@ -135,12 +136,11 @@ CubeDrawable::CubeDrawable(ID3D11Device* device, ID3D11DeviceContext* d3dDeviceC
 
      };
 
-     std::vector<VERTEXDATA> VertexData;
-     VertexData.push_back(vertexDatainfo);
+     vertexDatainfo.push_back(VertexData);
 
 
 
-   Matrix = std::make_shared<ConstantBuffer<VERTEXDATA>>(device, VertexData, "Vertex",0);
+   Matrix = std::make_shared<ConstantBuffer<VERTEXDATA>>(device, vertexDatainfo, "Vertex",0);
    AddBindable(Matrix);
    
 
@@ -167,11 +167,12 @@ CubeDrawable::CubeDrawable(ID3D11Device* device, ID3D11DeviceContext* d3dDeviceC
    AddBindable(LightBuffer);
 
 
-   auto texture = std::make_shared<Texture>(Device, D3DDeviceContext,0, L"Texture/brick1.dds");
+  auto texture = std::make_shared<Texture>(Device, D3DDeviceContext,0, L"Texture/BrickTexture.png");
    AddBindable(texture);
 
    auto NormalMap = std::make_shared<Texture>(Device, D3DDeviceContext, 1,L"Texture/BrickNormal.png");
    AddBindable(NormalMap);
+
    /// Create index Buffer/////////////////////////////////////////////////////////////////
 
    auto indexBuffer = std::make_shared<IndexBuffer>(device, CubeIndex);
@@ -195,8 +196,7 @@ CubeDrawable::CubeDrawable(ID3D11Device* device, ID3D11DeviceContext* d3dDeviceC
         {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
         {"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 16, D3D11_INPUT_PER_VERTEX_DATA, 0},
         {"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 32, D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0 , 48, D3D11_INPUT_PER_VERTEX_DATA, 0}
-
+        {"COLOR", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 48, D3D11_INPUT_PER_VERTEX_DATA, 0},
 
    };
 
@@ -204,7 +204,7 @@ CubeDrawable::CubeDrawable(ID3D11Device* device, ID3D11DeviceContext* d3dDeviceC
    AddBindable(inputLayout);
 
    ////////////////////////////////////////////////////////////////////////////////////////////////////  
-   
+
    
 
 }
@@ -270,7 +270,6 @@ void CubeDrawable::Update(){
 
              LightsRef[i]->GetLocation(),
              LightsRef[i]->GetDirection(),
-
              LightsRef[i]->GetColor(),
              LightsRef[i]->GetConeDetails(),
              LightsRef[i]->GetAttenuition(),

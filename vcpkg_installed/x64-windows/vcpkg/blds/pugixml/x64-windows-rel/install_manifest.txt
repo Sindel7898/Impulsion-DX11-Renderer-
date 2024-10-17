@@ -1,0 +1,9 @@
+C:/Users/Amir sanni/source/repos/DX11/LearnDX/vcpkg_installed/x64-windows/vcpkg/pkgs/pugixml_x64-windows/lib/pugixml.lib
+C:/Users/Amir sanni/source/repos/DX11/LearnDX/vcpkg_installed/x64-windows/vcpkg/pkgs/pugixml_x64-windows/bin/pugixml.dll
+C:/Users/Amir sanni/source/repos/DX11/LearnDX/vcpkg_installed/x64-windows/vcpkg/pkgs/pugixml_x64-windows/lib/cmake/pugixml/pugixml-targets.cmake
+C:/Users/Amir sanni/source/repos/DX11/LearnDX/vcpkg_installed/x64-windows/vcpkg/pkgs/pugixml_x64-windows/lib/cmake/pugixml/pugixml-targets-release.cmake
+C:/Users/Amir sanni/source/repos/DX11/LearnDX/vcpkg_installed/x64-windows/vcpkg/pkgs/pugixml_x64-windows/lib/cmake/pugixml/pugixml-config-version.cmake
+C:/Users/Amir sanni/source/repos/DX11/LearnDX/vcpkg_installed/x64-windows/vcpkg/pkgs/pugixml_x64-windows/lib/cmake/pugixml/pugixml-config.cmake
+C:/Users/Amir sanni/source/repos/DX11/LearnDX/vcpkg_installed/x64-windows/vcpkg/pkgs/pugixml_x64-windows/lib/pkgconfig/pugixml.pc
+C:/Users/Amir sanni/source/repos/DX11/LearnDX/vcpkg_installed/x64-windows/vcpkg/pkgs/pugixml_x64-windows/include/pugiconfig.hpp
+C:/Users/Amir sanni/source/repos/DX11/LearnDX/vcpkg_installed/x64-windows/vcpkg/pkgs/pugixml_x64-windows/include/pugixml.hpp

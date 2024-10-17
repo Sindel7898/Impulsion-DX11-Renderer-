@@ -73,9 +73,14 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>C:\Users\Amir sanni\source\repos\DX11\LearnDX\packages\imgui;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Amir sanni\source\repos\DX11\LearnDX\DX11\x64\Release;C:\Users\Amir sanni\source\repos\DX11\LearnDX\x64\Debug;C:\Users\Amir sanni\source\repos\DX11\LearnDX\packages\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>C:\Users\Amir sanni\source\repos\DX11\LearnDX\packages\imgui;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\Amir sanni\source\repos\DX11\LearnDX\DX11\x64\Release;C:\Users\Amir sanni\source\repos\DX11\LearnDX\x64\Debug;C:\Users\Amir sanni\source\repos\DX11\LearnDX\packages\Lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Label="Vcpkg">
+    <VcpkgEnableManifest>true</VcpkgEnableManifest>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -152,6 +157,8 @@
     <ClCompile Include="Drawable.cpp" />
     <ClCompile Include="CubeDrawable.cpp" />
     <ClCompile Include="Light.cpp" />
+    <ClCompile Include="MeshDrawable.cpp" />
+    <ClCompile Include="MeshLoader.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="D3D11.cpp" />
     <ClCompile Include="Application.cpp" />
@@ -175,6 +182,8 @@
     <ClInclude Include="InputLayout.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="MACROS.h" />
+    <ClInclude Include="MeshDrawable.h" />
+    <ClInclude Include="MeshLoader.h" />
     <ClInclude Include="PixelShader.h" />
     <ClInclude Include="CubeDrawable.h" />
     <ClInclude Include="Texture.h" />

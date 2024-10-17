@@ -28,6 +28,9 @@
     <Filter Include="Source Files\IMGUI">
       <UniqueIdentifier>{da581897-ee64-421f-a8e7-e4a0efe75a1b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Drawable System">
+      <UniqueIdentifier>{350560ab-c092-4540-b2b4-81a2c99b8054}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp">
@@ -40,9 +43,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="D3D11.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Drawable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\packages\imgui\imgui_impl_dx11.cpp">
@@ -69,14 +69,23 @@
     <ClCompile Include="..\packages\imgui\imgui_impl_glfw.cpp">
       <Filter>Source Files\IMGUI</Filter>
     </ClCompile>
-    <ClCompile Include="CubeDrawable.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Light.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CubeDrawable.cpp">
+      <Filter>Source Files\Drawable System</Filter>
+    </ClCompile>
+    <ClCompile Include="Drawable.cpp">
+      <Filter>Source Files\Drawable System</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshDrawable.cpp">
+      <Filter>Source Files\Drawable System</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>Source Files\Drawable System</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -146,14 +155,20 @@
     <ClInclude Include="..\packages\imgui\imgui_impl_glfw.h">
       <Filter>Header Files\IMGUI</Filter>
     </ClInclude>
-    <ClInclude Include="Light.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="Texture.h">
       <Filter>Header Files\BindableSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>Header Files\Drawable System</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshDrawable.h">
+      <Filter>Header Files\Drawable System</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -38,12 +38,13 @@ D3D11::D3D11(Window* windowApp){
     DXGI_SWAP_CHAIN_DESC SwapChainDesc{};
 
     SwapChainDesc.BufferDesc = SwapChainBufferData;
-    SwapChainDesc.SampleDesc = SamplingData;
+    SwapChainDesc.SampleDesc.Count = 1;  // No MSAA support for FLIP_SEQUENTIAL
+    SwapChainDesc.SampleDesc.Quality = 0;
     SwapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-    SwapChainDesc.BufferCount = 1;
+    SwapChainDesc.BufferCount = 2;  // At least 2 buffers required for FLIP_SEQUENTIAL
     SwapChainDesc.OutputWindow = window;
-    SwapChainDesc.Windowed = TRUE;
-    SwapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+    SwapChainDesc.Windowed = TRUE;  // Typically used for windowed applications
+    SwapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;  // Use the flip model
     SwapChainDesc.Flags = 0;
 
     CHECK_HRESULT(D3D11CreateDeviceAndSwapChain(
@@ -71,14 +72,15 @@ D3D11::D3D11(Window* windowApp){
 
     //// Creating a depth stencil state and setting it to the OUT PUT MERGER //////////////////////////////////////////////////// 
    
-    D3D11_DEPTH_STENCIL_DESC DepthStencilStateDesc{};
-    DepthStencilStateDesc.DepthEnable = TRUE;
-    DepthStencilStateDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-    DepthStencilStateDesc.DepthFunc = D3D11_COMPARISON_LESS;
+    D3D11_DEPTH_STENCIL_DESC depthStencilDesc{};
+    depthStencilDesc.DepthEnable = TRUE;  // Enable depth testing
+    depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;  // Allow writing to the depth buffer
+    depthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;  // Depth test will pass if the new depth is less (closer to the camera)
+    depthStencilDesc.StencilEnable = FALSE;  // Disable stencil testing (optional)
 
     Microsoft::WRL::ComPtr<ID3D11DepthStencilState> DepthSterncilState;
 
-    CHECK_HRESULT(D3DDevice->CreateDepthStencilState(&DepthStencilStateDesc, &DepthSterncilState));
+    CHECK_HRESULT(D3DDevice->CreateDepthStencilState(&depthStencilDesc, &DepthSterncilState));
     D3DDeviceContext->OMSetDepthStencilState(DepthSterncilState.Get(), 1);
 
     
@@ -108,6 +110,18 @@ D3D11::D3D11(Window* windowApp){
 
     D3DDeviceContext->OMSetRenderTargets(1, RenderTargetView.GetAddressOf(), DepthSentcilView.Get());
 
+
+    D3D11_RASTERIZER_DESC rasterizerDesc{};
+    rasterizerDesc.FillMode = D3D11_FILL_SOLID;      // Render filled triangles
+    rasterizerDesc.CullMode = D3D11_CULL_BACK;       // Cull back-facing triangles
+    rasterizerDesc.FrontCounterClockwise = FALSE;    // Use clockwise winding order for front faces
+    rasterizerDesc.DepthClipEnable = TRUE;           // Enable depth clipping
+
+    // Create and set the rasterizer state
+    Microsoft::WRL::ComPtr<ID3D11RasterizerState> rasterizerState;
+    CHECK_HRESULT(D3DDevice->CreateRasterizerState(&rasterizerDesc, &rasterizerState));
+    D3DDeviceContext->RSSetState(rasterizerState.Get());
+
     load();
 
     }
@@ -116,33 +130,18 @@ D3D11::D3D11(Window* windowApp){
 
         DirectX::XMFLOAT3A Lightlocation = { -2.0f,1.0f,1.0f };
 
-        DirectX::XMFLOAT3A Lightlocation2 = { -30.0f,1.0f,1.0f };
 
         DirectX::XMFLOAT3 Cubelocation = { 1.0f,-10.0f,20.0f };
-
-       Light1 = std::make_shared<Light>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, Lightlocation,0);
-        //Light2 = std::make_shared <Light>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, Lightlocation2,1);
+        DirectX::XMFLOAT3 Modellocation = { 1.0f,10.0f,20.0f };
 
 
-        float spacing = 4.0f;
-        
-        for (int i = 0; i <= 1; i++) {
+       Lights.push_back(std::make_shared<Light>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, Lightlocation, LightNumber));
+       
 
-            std::random_device rd;  // Obtain a random number from hardware
-            std::mt19937 eng(rd()); // Seed the generator
+        Model = std::make_shared<MeshDrawable>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, Modellocation, Lights);
 
-            // Define the range
-            std::uniform_int_distribution<> distr(-25, 25); // Define the range [1, 100]
-
-            // Generate and output a random number
-            Lightlocation.x = distr(eng);
-
-            Lightlocation.z = distr(eng);
-
-          Lights.push_back(std::make_shared<Light>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, Lightlocation, i));
-        }
     
-        Cube.push_back(std::make_shared<CubeDrawable>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, Cubelocation, Lights)); // Adjust parameters as needed
+       Cube.push_back(std::make_shared<CubeDrawable>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, Cubelocation, Lights)); // Adjust parameters as needed
 
         int visibleCubeCount = Cube.size();
         std::cout << "Total number of cubes on screen: " << visibleCubeCount << std::endl;
@@ -151,6 +150,7 @@ D3D11::D3D11(Window* windowApp){
 
      float clearColor[3] = { 0.1f, 0.1f, 0.1f};
 
+    
     void D3D11::Update() {
 
         ClearBuffer(0.0f, 0.0f, 0.0f);
@@ -164,8 +164,17 @@ D3D11::D3D11(Window* windowApp){
         ImGui::End();
        
 
-      
-        for (int i = 0; i < Cube.size(); i++) {
+        if (ImGui::Button("Create Light"))
+        {
+            DirectX::XMFLOAT3A Lightlocation = { -2.0f,1.0f,1.0f };
+            LightNumber++;
+            Lights.push_back(std::make_shared<Light>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, Lightlocation, LightNumber));
+
+        }
+
+        Model->Update(Lights);
+
+       for (int i = 0; i < Cube.size(); i++) {
 
             Cube[i]->Update();
          
@@ -173,6 +182,7 @@ D3D11::D3D11(Window* windowApp){
             
         }
 
+        Model->Draw();
 
         for (int i = 0; i < Lights.size(); i++) {
 
@@ -201,7 +211,7 @@ void D3D11::ClearBuffer(float red, float green, float blue)
     float clour[] = { red,green,blue,1.0f };
 
     D3DDeviceContext->ClearRenderTargetView(RenderTargetView.Get(), clour);
-    D3DDeviceContext->ClearDepthStencilView(DepthSentcilView.Get(), D3D11_CLEAR_DEPTH, 1, 0);
+    D3DDeviceContext->ClearDepthStencilView(DepthSentcilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
     
  }
 
@@ -209,6 +219,8 @@ void D3D11::ClearBuffer(float red, float green, float blue)
 void D3D11::EndFrame()
 {
     SwapChain->Present(1, 0);
+    D3DDeviceContext->OMSetRenderTargets(1, RenderTargetView.GetAddressOf(), DepthSentcilView.Get());
+
 }
 
 

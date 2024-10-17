@@ -14,6 +14,7 @@ struct VSIN
     float3 normal : NORMAL;
     float2 tex : TEXCOORD;
     float3 color : COLOR;
+
 };
 
 
@@ -32,13 +33,12 @@ struct VSOUT
 VSOUT VSMain(VSIN input)
 {
     VSOUT output;
-    
+    output.color = input.color; 
     // Transform the vertex position to clip space
     
     float4 worldPosition = mul(float4(input.position, 1.0f), WorldMatrix);
     
-    output.viewVector = CameraPosition.xyz - worldPosition.xyz;
-    output.viewVector = normalize(output.viewVector);
+    output.viewVector = normalize(CameraPosition - worldPosition.xyz);
 
     
     float4 viewPosition = mul(worldPosition, ViewMatrix);
@@ -47,8 +47,7 @@ VSOUT VSMain(VSIN input)
 
     output.normal = normalize(mul(float4(input.normal, 0.0f), WorldMatrix));
     
-    output.worldPosition = worldPosition.xyzw;
-    output.color = input.color;
+    output.worldPosition = worldPosition;
     output.tex = input.tex;
     
     return output;

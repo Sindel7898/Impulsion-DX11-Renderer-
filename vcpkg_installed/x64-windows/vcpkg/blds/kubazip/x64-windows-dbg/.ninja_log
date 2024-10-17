@@ -1,0 +1,4 @@
+# ninja log v5
+3	391	7508866893600646	CMakeFiles/kubazip.dir/src/zip.c.obj	41b95f024cc83f38
+393	455	7508866894368135	kubazip.lib	b7cd7fe92ef21baf
+455	562	0	CMakeFiles/install.util	75d93dcd7fe206b8

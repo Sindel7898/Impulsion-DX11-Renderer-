@@ -16,13 +16,24 @@ public:
         IndexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
         IndexBufferDesc.CPUAccessFlags = 0;
         IndexBufferDesc.MiscFlags = 0;
+        IndexBufferDesc.StructureByteStride = 0;
 
         D3D11_SUBRESOURCE_DATA INDEXsURF = {};
         INDEXsURF.pSysMem = CubeIndex.data();
+        INDEXsURF.SysMemPitch = 0;
+        INDEXsURF.SysMemSlicePitch = 0;
 
-        CHECK_HRESULT(device->CreateBuffer(&IndexBufferDesc, &INDEXsURF, &iIndexBuffer));
+        HRESULT hr =  device->CreateBuffer(&IndexBufferDesc, &INDEXsURF, &iIndexBuffer);
 
-       
+        if (SUCCEEDED(hr)) {\
+
+            std::cout << "INDEX buffer created. Total count: "  << std::endl;
+        }
+        else
+        {
+            std::cout << " BAD INDEX buffer created. Total count: " << std::endl;
+
+        }
 	}
 
 	virtual void Bind(ID3D11DeviceContext* context) override {

@@ -1,0 +1,7 @@
+C:/Users/Amir sanni/source/repos/DX11/LearnDX/vcpkg_installed/x64-windows/vcpkg/pkgs/minizip_x64-windows/debug/lib/minizip.lib
+C:/Users/Amir sanni/source/repos/DX11/LearnDX/vcpkg_installed/x64-windows/vcpkg/pkgs/minizip_x64-windows/debug/bin/minizip.dll
+C:/Users/Amir sanni/source/repos/DX11/LearnDX/vcpkg_installed/x64-windows/vcpkg/pkgs/minizip_x64-windows/debug/share/unofficial-minizip/unofficial-minizipConfig.cmake
+C:/Users/Amir sanni/source/repos/DX11/LearnDX/vcpkg_installed/x64-windows/vcpkg/pkgs/minizip_x64-windows/debug/share/unofficial-minizip/unofficial-minizipConfigVersion.cmake
+C:/Users/Amir sanni/source/repos/DX11/LearnDX/vcpkg_installed/x64-windows/vcpkg/pkgs/minizip_x64-windows/debug/share/unofficial-minizip/unofficial-minizipTargets.cmake
+C:/Users/Amir sanni/source/repos/DX11/LearnDX/vcpkg_installed/x64-windows/vcpkg/pkgs/minizip_x64-windows/debug/share/unofficial-minizip/unofficial-minizipTargets-debug.cmake
+C:/Users/Amir sanni/source/repos/DX11/LearnDX/vcpkg_installed/x64-windows/vcpkg/pkgs/minizip_x64-windows/debug/lib/pkgconfig/minizip.pc

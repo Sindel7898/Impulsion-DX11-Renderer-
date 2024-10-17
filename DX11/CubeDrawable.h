@@ -15,6 +15,7 @@
 #include"Camera.h"
 #include "Light.h"
 #include "Texture.h"
+#include "MeshLoader.h"
 
 class CubeDrawable : public Drawable {
 
@@ -35,13 +36,12 @@ public:
 
     struct Vertex {
 
-        DirectX::XMFLOAT3A position;   // Vertex position
+        DirectX::XMFLOAT3A position; 
         DirectX::XMFLOAT3A normal;
-        DirectX::XMFLOAT2A texCoord;
+        DirectX::XMFLOAT2A Texture;
         DirectX::XMFLOAT3A color;
-        
-
     };
+
 
 
     struct VERTEXDATA {
@@ -82,6 +82,5 @@ private:
     ID3D11Device* Device;
     ID3D11DeviceContext* D3DDeviceContext;
     Window* WindowContextHolder;
-
 
 };
