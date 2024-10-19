@@ -168,7 +168,6 @@ void MeshDrawable::Update(std::vector<std::shared_ptr<Light>>& Lights) {
             
              LightsRef[i]->GetLocation(),
              LightsRef[i]->GetDirection(),
-
              LightsRef[i]->GetColor(),
              LightsRef[i]->GetConeDetails(),
              LightsRef[i]->GetAttenuition(),

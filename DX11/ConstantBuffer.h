@@ -14,7 +14,7 @@ public:
       
 
         D3D11_BUFFER_DESC ConstBufferDesc = {};
-        ConstBufferDesc.ByteWidth = sizeof(T) * cbData.size();;
+        ConstBufferDesc.ByteWidth = sizeof(T) * cbData.size() * 2;
         ConstBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
         ConstBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
         ConstBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;

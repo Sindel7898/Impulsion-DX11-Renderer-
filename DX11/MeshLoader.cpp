@@ -1,4 +1,5 @@
 #include "MeshLoader.h"
+#include <iostream>
 
 void MeshLoader::LoadModel(const std::string& pFile)
 {
@@ -11,13 +12,17 @@ void MeshLoader::LoadModel(const std::string& pFile)
         aiProcess_FlipUVs | aiProcess_FlipWindingOrder);
     
 
-   /* if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
+   if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
         std::cerr << "Error loading model: " << importer.GetErrorString() << std::endl;
         return;
-    }*/
+    }
 
     // Process the root node to start loading the model's meshes
-    ProcessNode(scene->mRootNode, scene);
+   if (scene) {
+
+       ProcessNode(scene->mRootNode, scene);
+
+   }
 }
 
 void MeshLoader::ProcessNode(aiNode* node, const aiScene* scene)

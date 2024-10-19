@@ -25,7 +25,7 @@ public:
 
         HRESULT hr =  device->CreateBuffer(&IndexBufferDesc, &INDEXsURF, &iIndexBuffer);
 
-        if (SUCCEEDED(hr)) {\
+        if (SUCCEEDED(hr)) {
 
             std::cout << "INDEX buffer created. Total count: "  << std::endl;
         }

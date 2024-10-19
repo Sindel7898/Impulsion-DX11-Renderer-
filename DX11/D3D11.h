@@ -63,5 +63,4 @@ public:
     ID3D11Device* GetDevice() { return D3DDevice.Get(); };
     ID3D11DeviceContext* GetDeviceContext() { return D3DDeviceContext.Get(); };
 
-
 };

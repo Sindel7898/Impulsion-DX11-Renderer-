@@ -135,8 +135,11 @@ D3D11::D3D11(Window* windowApp){
         DirectX::XMFLOAT3 Modellocation = { 1.0f,10.0f,20.0f };
 
 
-       Lights.push_back(std::make_shared<Light>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, Lightlocation, LightNumber));
-       
+        Lights.push_back(std::make_shared<Light>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, Lightlocation, LightNumber++));
+        Lights.push_back(std::make_shared<Light>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, Lightlocation, LightNumber++));
+        Lights.push_back(std::make_shared<Light>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, Lightlocation, LightNumber++));
+        Lights.push_back(std::make_shared<Light>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, Lightlocation, LightNumber++));
+
 
         Model = std::make_shared<MeshDrawable>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, Modellocation, Lights);
 
@@ -164,11 +167,11 @@ D3D11::D3D11(Window* windowApp){
         ImGui::End();
        
 
-        if (ImGui::Button("Create Light"))
+      if (ImGui::Button("Create Light"))
         {
-            DirectX::XMFLOAT3A Lightlocation = { -2.0f,1.0f,1.0f };
-            LightNumber++;
-            Lights.push_back(std::make_shared<Light>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, Lightlocation, LightNumber));
+            DirectX::XMFLOAT3A Lightlocation = { -2.0f + LightNumber * 1.0f, 1.0f, 1.0f }; 
+
+            Lights.push_back(std::make_shared<Light>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, Lightlocation, LightNumber++));
 
         }
 

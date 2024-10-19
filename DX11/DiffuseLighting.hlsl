@@ -23,7 +23,7 @@ struct LightData
 
 cbuffer LightBuffer : register(b0)
 {  
-    LightData lights[4];
+    LightData lights[6];
 };
 
 struct VSOUT
@@ -48,7 +48,7 @@ float DoAttenuation(LightData light, float distance)
 
 float4 DoDiffuse(LightData light, float3 LightVector, float3 Normal)
 {
-   float brightnessMultiplier = 2.0f;
+   float brightnessMultiplier = 1.0f;
     
     float3 normalizedNormal = normalize(Normal);
     
@@ -79,40 +79,40 @@ float4 PSMain(VSOUT input) : SV_TARGET
 {
     float4 finalColor = float4(0, 0, 0, 1); // Initialize final color
     float4 textureColor = texture0.Sample(sampler0, input.tex);
-    float4 SpecularColor = { 1.0f, 1.0f, 1.0f, 1.0f };
     float4 Ambient = { 0.1f, 0.1f, 0.1f, 0.1f };
 
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 6; i++)
     {
+
         LightData light = lights[i];
         
         float distance = length(light.lightPosition - input.worldPosition.xyz);
-        float attenuation = DoAttenuation(light, distance);
+        float attenuation = saturate(DoAttenuation(light, distance)); // Ensure attenuation is within [0, 1]
 
         float3 lightVector = normalize(light.lightPosition - input.worldPosition.xyz);
         
         float4 diffuse = DoDiffuse(light, lightVector, input.normal);
 
-        float4 Specular = calcSpecular(lightVector, input.normal, input.viewVector, SpecularColor, 32.0f);
+        float4 Specular = calcSpecular(lightVector, input.normal, input.viewVector, light.lightColor, 32.0f);
 
         if (light.LightType.x == 0.0f)
         {
-            finalColor += textureColor * (Ambient + diffuse * attenuation) + Specular * attenuation;
+            finalColor += textureColor * (diffuse * attenuation) + Specular * attenuation;
 
         }
         
         if (light.LightType.x == 1.0f)
         {
             float spotEffect = DoSpotCone(light, lightVector);
-            finalColor += textureColor * (Ambient + diffuse * attenuation) * attenuation * spotEffect;
+            finalColor += textureColor * (Ambient + diffuse * attenuation) + Specular  * attenuation * spotEffect;
 
         }
         
     }
-    finalColor += Ambient; // Add ambient light contribution once
+
 
     finalColor = saturate(finalColor); // Clamp final color to [0, 1]
-
+    
     return finalColor;
 
 }
