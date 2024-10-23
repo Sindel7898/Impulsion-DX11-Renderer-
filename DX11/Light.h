@@ -43,7 +43,7 @@ private:
     DirectX::XMFLOAT3A Attenuition{ 0.5f,0.125f,0.0f };
     int  LightNumber;
     std::shared_ptr<ConstantBuffer<DirectX::XMMATRIX>> transformationConstantBuffer;
-    
+
     std::shared_ptr<ConstantBuffer<DirectX::XMFLOAT4>> LightConstantBuffer;
     
     DirectX::XMFLOAT2A LightType{ 0.0f,0.0f };

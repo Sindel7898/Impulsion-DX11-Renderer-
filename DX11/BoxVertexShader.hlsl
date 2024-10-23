@@ -5,7 +5,7 @@ cbuffer MatrixBuffer : register(b0)
     matrix ProjectionMatrix;
     matrix ViewMatrix;
     float3 CameraPosition;
-    float Padding;
+    float Emisive;
 };
 
 struct VSIN
@@ -13,7 +13,8 @@ struct VSIN
     float3 position : POSITION;
     float3 normal : NORMAL;
     float2 tex : TEXCOORD;
-    float3 color : COLOR;
+    float3 tangent : TANGENT;
+    float3 bitangent : BITANGENT;
 
 };
 
@@ -24,16 +25,16 @@ struct VSOUT
     float4 worldPosition : WorldPosition;
     float3 normal : NORMAL;
     float2 tex : TEXCOORD;
-    float3 color : COLOR;
+    float3 tangent : TANGENT;
+    float3 bitangent : BITANGENT;
     float3 viewVector : TEXCOORD2;
-
+    float Emisive : Emision;
 };
 
 
 VSOUT VSMain(VSIN input)
 {
     VSOUT output;
-    output.color = input.color; 
     // Transform the vertex position to clip space
     
     float4 worldPosition = mul(float4(input.position, 1.0f), WorldMatrix);
@@ -50,5 +51,8 @@ VSOUT VSMain(VSIN input)
     output.worldPosition = worldPosition;
     output.tex = input.tex;
     
+    output.Emisive = Emisive;
+    output.tangent = input.tangent;
+    output.bitangent = input.bitangent;
     return output;
 }

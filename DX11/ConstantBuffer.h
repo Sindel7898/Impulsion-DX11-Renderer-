@@ -8,13 +8,13 @@ class ConstantBuffer : public Bindable {
   
 public:
 
-    ConstantBuffer(ID3D11Device* device, std::vector<T> cbData, std::string ShaderToBind, UINT startslot) {
+    ConstantBuffer(ID3D11Device* device, std::vector<T> cbData, std::string ShaderToBind, UINT startslot, UINT Multiplier = 1) {
         HoldShaderToBindText = ShaderToBind;
         Startslot = startslot;
       
 
         D3D11_BUFFER_DESC ConstBufferDesc = {};
-        ConstBufferDesc.ByteWidth = sizeof(T) * cbData.size() * 2;
+        ConstBufferDesc.ByteWidth = sizeof(T) * cbData.size();
         ConstBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
         ConstBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
         ConstBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;

@@ -3,7 +3,6 @@
 #include "string"
 #include <WICTextureLoader.h>
 
-
 class Texture : public Bindable {
 
 public:

@@ -13,8 +13,7 @@ Camera::Camera() :
 	GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
 	videoMode = glfwGetVideoMode(primaryMonitor);
 	
-	float aspectRatio = videoMode->width / videoMode->height;
-        	aspectRatio *= 0.9;
+	float aspectRatio = videoMode->width * 0.9 / videoMode->height * 0.9;
 
 	projectionMatrix = DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(45.0f),
 		aspectRatio, 1.0f, 200.0f);

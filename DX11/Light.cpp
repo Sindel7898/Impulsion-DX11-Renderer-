@@ -106,6 +106,12 @@ Light::Light(ID3D11Device* device, ID3D11DeviceContext* d3dDeviceContext, Window
     AddBindable(transformationConstantBuffer);
 
 
+
+
+
+
+
+
     std::vector<DirectX::XMFLOAT4> LightPixelData = {
 
         {BaseColor}

@@ -14,7 +14,8 @@ public:
         DirectX::XMFLOAT3A vert;
         DirectX::XMFLOAT3A norm;
         DirectX::XMFLOAT2A text;
-        DirectX::XMFLOAT3A Color;
+        DirectX::XMFLOAT3A tangent;     // Tangent vector
+        DirectX::XMFLOAT3A bitangent;   // Bitangent vector
 
     };
 

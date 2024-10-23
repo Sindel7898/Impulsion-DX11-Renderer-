@@ -16,16 +16,21 @@
 #include "Light.h"
 #include "Texture.h"
 #include "MeshLoader.h"
+#include "ShadowMap.h"
 
 class CubeDrawable : public Drawable {
 
 public:
-    CubeDrawable(ID3D11Device* device, ID3D11DeviceContext* d3dDeviceContext, Window* windowContextHolder, DirectX::XMFLOAT3 location, std::vector<std::shared_ptr<Light>>& Lights);
+    CubeDrawable(ID3D11Device* device, ID3D11DeviceContext* d3dDeviceContext, Window* windowContextHolder, DirectX::XMFLOAT3 location,int cubenumber);
 
 
-    void Update();
+    void Update(std::vector<std::shared_ptr<Light>>& Lights);
+
 
     virtual void Draw() override;
+
+    void RenderShadowMap(ID3D11DeviceContext* context, ShadowMap* shadow);
+
 
 
 
@@ -73,8 +78,9 @@ public:
     std::shared_ptr<ConstantBuffer<VERTEXDATA>> Matrix;
 
     std::shared_ptr<ConstantBuffer<LightData>> LightBuffer;
+    std::shared_ptr<ConstantBuffer<DirectX::XMMATRIX>> LightPositionConstantBuffer;
 
-
+    int CubeNumber;
 private: 
 
     std::vector<std::shared_ptr<Light>> LightsRef;

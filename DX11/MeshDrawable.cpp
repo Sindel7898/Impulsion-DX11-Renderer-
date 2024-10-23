@@ -2,8 +2,8 @@
 
 
 
-MeshDrawable::MeshDrawable(ID3D11Device* device, ID3D11DeviceContext* d3dDeviceContext, Window* windowContextHolder, DirectX::XMFLOAT3 location, std::vector<std::shared_ptr<Light>>& Lights)
-    : Location(location), LightsRef(Lights),
+MeshDrawable::MeshDrawable(ID3D11Device* device, ID3D11DeviceContext* d3dDeviceContext, Window* windowContextHolder, DirectX::XMFLOAT3 location)
+    : Location(location),
     Device(device), D3DDeviceContext(d3dDeviceContext),
     WindowContextHolder1(windowContextHolder)
 {
@@ -12,7 +12,6 @@ MeshDrawable::MeshDrawable(ID3D11Device* device, ID3D11DeviceContext* d3dDeviceC
 
    
     LoadModel("Texture/models/HELMET/model.obj");
-
 
     auto vertexBuffer = std::make_shared<VertexBuffer<MeshLoader::ModelVertex>>(device, vertices, 1, 0);
     AddBindable(vertexBuffer);
@@ -45,34 +44,56 @@ MeshDrawable::MeshDrawable(ID3D11Device* device, ID3D11DeviceContext* d3dDeviceC
     Matrix = std::make_shared<ConstantBuffer<VERTEXDATA>>(device, vertexDatainfo, "Vertex", 0);
     AddBindable(Matrix);
 
+    DirectX::XMFLOAT3A Lightlocation = { -2.0f,1.0f,1.0f };
+    int  LightNumber = 0;
+
+    std::vector<std::shared_ptr<Light>> FaulseLights;
+
+    FaulseLights.push_back(std::make_shared<Light>(device, d3dDeviceContext, windowContextHolder, Lightlocation, LightNumber++));
+    FaulseLights.push_back(std::make_shared<Light>(device, d3dDeviceContext, windowContextHolder, Lightlocation, LightNumber++));
+    FaulseLights.push_back(std::make_shared<Light>(device, d3dDeviceContext, windowContextHolder, Lightlocation, LightNumber++));
+    FaulseLights.push_back(std::make_shared<Light>(device, d3dDeviceContext, windowContextHolder, Lightlocation, LightNumber++));
+    FaulseLights.push_back(std::make_shared<Light>(device, d3dDeviceContext, windowContextHolder, Lightlocation, LightNumber++));
 
 
     std::vector<LightData> LightDatainfo;
 
-    for (size_t i = 0; i < LightsRef.size(); i++)
+    for (size_t i = 0; i < FaulseLights.size(); i++)
     {
         LightData lightData = {
-             LightsRef[i]->GetLocation(),
-             LightsRef[i]->GetDirection(),
+             FaulseLights[i]->GetLocation(),
+             FaulseLights[i]->GetDirection(),
 
-             LightsRef[i]->GetColor(),
-             LightsRef[i]->GetConeDetails(),
+             FaulseLights[i]->GetColor(),
+             FaulseLights[i]->GetConeDetails(),
 
-             LightsRef[i]->GetAttenuition()
+             FaulseLights[i]->GetAttenuition()
         };
 
         LightDatainfo.push_back(lightData);
     }
 
-    LightBuffer = std::make_shared<ConstantBuffer<LightData>>(device, LightDatainfo, "Pixel", 0);
+
+    LightBuffer = std::make_shared<ConstantBuffer<LightData>>(device, LightDatainfo, "Pixel", 0,2);
     AddBindable(LightBuffer);
 
+    FaulseLights.clear();
 
     auto texture = std::make_shared<Texture>(Device, D3DDeviceContext,0, L"Texture/models/HELMET/Texture.jpeg");
-      AddBindable(texture);
+    AddBindable(texture);
 
-   
+    auto normaltexture = std::make_shared<Texture>(Device, D3DDeviceContext, 1, L"Texture/models/HELMET/NormalTexture.jpeg");
+    AddBindable(normaltexture);
 
+    auto emissiveTexture = std::make_shared<Texture>(Device, D3DDeviceContext, 2, L"Texture/models/HELMET/EmissiveTexture.jpeg");
+    AddBindable(emissiveTexture);
+
+    auto RoughnessTexture = std::make_shared<Texture>(Device, D3DDeviceContext, 3, L"Texture/models/HELMET/RoughnessTexture.jpeg");
+    AddBindable(RoughnessTexture);
+
+    auto MetalicTexture = std::make_shared<Texture>(Device, D3DDeviceContext, 4, L"Texture/models/HELMET/MetalicTexture.jpeg");
+    AddBindable(MetalicTexture);
+    
     auto indexBuffer = std::make_shared<IndexBuffer>(device, indices);
     AddBindable(indexBuffer);
 
@@ -94,7 +115,9 @@ MeshDrawable::MeshDrawable(ID3D11Device* device, ID3D11DeviceContext* d3dDeviceC
         {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
         {"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 16, D3D11_INPUT_PER_VERTEX_DATA, 0},
         {"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 32, D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 48, D3D11_INPUT_PER_VERTEX_DATA, 0},
+        {"TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 48, D3D11_INPUT_PER_VERTEX_DATA, 0},
+        {"BITANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 64, D3D11_INPUT_PER_VERTEX_DATA, 0},
+
 
     };
 
@@ -110,14 +133,12 @@ MeshDrawable::MeshDrawable(ID3D11Device* device, ID3D11DeviceContext* d3dDeviceC
 
 // stuff to be updated every frame
 void MeshDrawable::Update(std::vector<std::shared_ptr<Light>>& Lights) {
-    LightsRef = Lights;
     ImGui::Begin("Model Controls");
 
     ImGui::SliderFloat3("Model Position", &Location.x, -50.0f, 50.0f);
-
-
     ImGui::SliderFloat3(" Model Scale", &Scaling.x, -50.0f, 50.0f);
     ImGui::SliderFloat3("Model Rotation", &Rotation.x, -360.0f, 360.0f);
+    ImGui::SliderFloat("Model Immision", &ModelEmision, 0.0f, 4.0f);
 
 
     ImGui::End();
@@ -140,7 +161,6 @@ void MeshDrawable::Update(std::vector<std::shared_ptr<Light>>& Lights) {
 
     DirectX::XMFLOAT3 CameraPosition = Camera::GetInstance().GetPosition();
 
-    float MatrixDataCBPadding1 = 0.0f;
 
     VERTEXDATA vertexDatainfo = {
 
@@ -148,8 +168,7 @@ void MeshDrawable::Update(std::vector<std::shared_ptr<Light>>& Lights) {
        ProjectionMatrix,
        ViewMatrix,
        CameraPosition,
-       MatrixDataCBPadding1
-
+       ModelEmision
     };
 
     std::vector<VERTEXDATA> VertexData;
@@ -166,12 +185,12 @@ void MeshDrawable::Update(std::vector<std::shared_ptr<Light>>& Lights) {
     {
         LightData lightData = {
             
-             LightsRef[i]->GetLocation(),
-             LightsRef[i]->GetDirection(),
-             LightsRef[i]->GetColor(),
-             LightsRef[i]->GetConeDetails(),
-             LightsRef[i]->GetAttenuition(),
-             LightsRef[i]->GetLightType(),
+             Lights[i]->GetLocation(),
+             Lights[i]->GetDirection(),
+             Lights[i]->GetColor(),
+             Lights[i]->GetConeDetails(),
+             Lights[i]->GetAttenuition(),
+             Lights[i]->GetLightType(),
 
         };
 
@@ -204,5 +223,6 @@ void MeshDrawable::Draw() {
 
     D3DDeviceContext->DrawIndexed(indexCount, 0, 0);
 }
+
 
 

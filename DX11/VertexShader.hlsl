@@ -25,7 +25,6 @@ VS_OUTPUT VSMain(float3 Pos : POSITION, float3 normals : NORMAL)
 
     output.Pos = mul(viewPosition, ProjectionMatrix);
 
-    
     output.Normal = normalize(mul(float4(normals,0.0f), WorldMatrix));
 
    

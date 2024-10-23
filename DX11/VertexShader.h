@@ -26,6 +26,11 @@ public:
 
     }
 
+    ID3D11VertexShader* GetShader()  {
+
+        return pVertexShader.Get();
+    }
+
 private:
 
     Microsoft::WRL::ComPtr<ID3D11VertexShader> pVertexShader;

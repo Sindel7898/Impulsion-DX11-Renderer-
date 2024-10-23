@@ -49,15 +49,8 @@ void MeshLoader::ProcessMesh(aiMesh* mesh, const aiScene* scene)
         vertex.vert.x = mesh->mVertices[i].x;
         vertex.vert.y = mesh->mVertices[i].y;
         vertex.vert.z = mesh->mVertices[i].z;
-        vertex.Color.x = 1.0f; 
-        vertex.Color.y = 1.0f; // Set green channel
-        vertex.Color.z = 1.0f; // Set blue channel
-
-        if (mesh->HasTextureCoords(0))
-        {
-            vertex.text.x = (float)mesh->mTextureCoords[0][i].x;
-            vertex.text.y = (float)mesh->mTextureCoords[0][i].y;
-        }
+        
+    
 
         if (mesh->HasNormals())
         {
@@ -65,6 +58,25 @@ void MeshLoader::ProcessMesh(aiMesh* mesh, const aiScene* scene)
             vertex.norm.y = mesh->mNormals[i].y;
             vertex.norm.z = mesh->mNormals[i].z;
         }
+
+        if (mesh->HasTextureCoords(0))
+        {
+            vertex.text.x = (float)mesh->mTextureCoords[0][i].x;
+            vertex.text.y = (float)mesh->mTextureCoords[0][i].y;
+        }
+
+        if (mesh->HasTangentsAndBitangents())
+        {
+            vertex.tangent.x = mesh->mTangents[i].x;
+            vertex.tangent.y = mesh->mTangents[i].y;
+            vertex.tangent.z = mesh->mTangents[i].z;
+
+            vertex.bitangent.x = mesh->mBitangents[i].x;
+            vertex.bitangent.y = mesh->mBitangents[i].y;
+            vertex.bitangent.z = mesh->mBitangents[i].z;
+        }
+
+
         vertices.push_back(vertex);
     }
 

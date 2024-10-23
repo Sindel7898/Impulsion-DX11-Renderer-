@@ -23,12 +23,13 @@ std::vector<UINT> CubeIndex = {
 
 
 
-CubeDrawable::CubeDrawable(ID3D11Device* device, ID3D11DeviceContext* d3dDeviceContext, Window* windowContextHolder, DirectX::XMFLOAT3 location, std::vector<std::shared_ptr<Light>>& Lights)
-    : Location(location), LightsRef(Lights),
+CubeDrawable::CubeDrawable(ID3D11Device* device, ID3D11DeviceContext* d3dDeviceContext, Window* windowContextHolder, DirectX::XMFLOAT3 location, int cubenumber)
+    : Location(location),
       Device(device), D3DDeviceContext(d3dDeviceContext), 
       WindowContextHolder(windowContextHolder)
 {
- 
+    CubeNumber = cubenumber;
+
    
     windowContextHolderHolder = windowContextHolder;
    
@@ -142,28 +143,65 @@ CubeDrawable::CubeDrawable(ID3D11Device* device, ID3D11DeviceContext* d3dDeviceC
 
    Matrix = std::make_shared<ConstantBuffer<VERTEXDATA>>(device, vertexDatainfo, "Vertex",0);
    AddBindable(Matrix);
+
+   DirectX::XMFLOAT3A Lightlocation = { -2.0f,1.0f,1.0f };
+
+   DirectX::XMMATRIX lightPerspectiveMatrix = DirectX::XMMatrixPerspectiveFovRH(DirectX::XM_PIDIV2, 1.0f, 12.f, 50.f);
+
+   DirectX::XMFLOAT3 eye = { 0.0f, 2.0f, -5.0f }; // Move the camera away from the target
+   DirectX::XMFLOAT3 at = { Lightlocation.x, Lightlocation.y, Lightlocation.z };
+   DirectX::XMFLOAT3 up = { 0.0f, 1.0f, 0.0f };
+
+   DirectX::XMMATRIX lightviewMatrix = DirectX::XMMatrixLookAtLH(
+
+       DirectX::XMLoadFloat3(&at),   // Camera position
+       DirectX::XMLoadFloat3(&eye),     // Target we're looking at
+       DirectX::XMLoadFloat3(&up)          // Up direction
+
+   );
+
+   std::vector<DirectX::XMMATRIX> initialLightPosition = {
+
+     lightviewMatrix,
+     lightPerspectiveMatrix
+   };
+
+   LightPositionConstantBuffer = std::make_shared<ConstantBuffer<DirectX::XMMATRIX>>(device, initialLightPosition, "Vertex", 1);
+   AddBindable(LightPositionConstantBuffer);
+
+
+
+
    
+   std::vector<std::shared_ptr<Light>> FaulseLights;
+
+   int  LightNumber = 0;
+
+   FaulseLights.push_back(std::make_shared<Light>(device, d3dDeviceContext, windowContextHolder, Lightlocation, LightNumber++));
+   FaulseLights.push_back(std::make_shared<Light>(device, d3dDeviceContext, windowContextHolder, Lightlocation, LightNumber++));
+   FaulseLights.push_back(std::make_shared<Light>(device, d3dDeviceContext, windowContextHolder, Lightlocation, LightNumber++));
+   FaulseLights.push_back(std::make_shared<Light>(device, d3dDeviceContext, windowContextHolder, Lightlocation, LightNumber++));
+   FaulseLights.push_back(std::make_shared<Light>(device, d3dDeviceContext, windowContextHolder, Lightlocation, LightNumber++));
 
 
    std::vector<LightData> LightDatainfo;
 
-   for (size_t i = 0; i < LightsRef.size(); i++)
+   for (size_t i = 0; i < FaulseLights.size(); i++)
    {
        LightData lightData = {
+            FaulseLights[i]->GetLocation(),
+            FaulseLights[i]->GetDirection(),
 
-            LightsRef[i]->GetLocation(),
-            LightsRef[i]->GetDirection(),
+            FaulseLights[i]->GetColor(),
+            FaulseLights[i]->GetConeDetails(),
 
-            LightsRef[i]->GetColor(),
-            LightsRef[i]->GetConeDetails(),
-
-            LightsRef[i]->GetAttenuition()
+            FaulseLights[i]->GetAttenuition()
        };
 
        LightDatainfo.push_back(lightData);
    }
 
-   LightBuffer = std::make_shared<ConstantBuffer<LightData>>(device, LightDatainfo, "Pixel",0);
+   LightBuffer = std::make_shared<ConstantBuffer<LightData>>(device, LightDatainfo, "Pixel",0,2);
    AddBindable(LightBuffer);
 
 
@@ -211,15 +249,14 @@ CubeDrawable::CubeDrawable(ID3D11Device* device, ID3D11DeviceContext* d3dDeviceC
 
 
 // stuff to be updated every frame
-void CubeDrawable::Update(){
+void CubeDrawable::Update(std::vector<std::shared_ptr<Light>>& Lights){
+    LightsRef = Lights;
 
     ImGui::Begin("Cube Controls");
 
-    ImGui::SliderFloat3("Cube Position", &Location.x, -50.0f, 50.0f);
-
-
-    ImGui::SliderFloat3("Scale", &Scaling.x, -50.0f, 50.0f);
-    ImGui::SliderFloat3("Rotation", &Rotation.x, -360.0f, 360.0f);
+    ImGui::SliderFloat3(("Cube Position" + std::to_string(CubeNumber)).c_str(), &Location.x, -50.0f, 50.0f);
+    ImGui::SliderFloat3(("Scale" + std::to_string(CubeNumber)).c_str(), &Scaling.x, -50.0f, 50.0f);
+    ImGui::SliderFloat3(("Rotation" + std::to_string(CubeNumber)).c_str(), &Rotation.x, -360.0f, 360.0f);
 
 
     ImGui::End();
@@ -282,6 +319,7 @@ void CubeDrawable::Update(){
 
     LightBuffer->Update(D3DDeviceContext, LightDatainfo);
 
+
 }
 
 void CubeDrawable::Draw()  {
@@ -307,3 +345,62 @@ void CubeDrawable::Draw()  {
 }
 
 
+void CubeDrawable::RenderShadowMap(ID3D11DeviceContext* context, ShadowMap* shadow) {
+
+    // Clear the depth stencil view
+    context->ClearDepthStencilView(shadow->DepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+
+    // Set the depth stencil view as the render target
+    context->OMSetRenderTargets(0, nullptr, shadow->DepthStencilView.Get());
+
+    // Set the rasterizer state for shadow rendering
+    context->RSSetState(shadow->ShadowRenderState.Get());
+
+    // Set the viewport for shadow rendering
+    D3D11_VIEWPORT shadowViewport = {};
+    shadowViewport.Width = static_cast<FLOAT>(WindowContextHolder->GetWindowWidth());  // Set the width of the shadow map
+    shadowViewport.Height = static_cast<FLOAT>(WindowContextHolder->GetWindowWidth()); // Set the height of the shadow map
+    shadowViewport.MinDepth = 0.0f;
+    shadowViewport.MaxDepth = 1.0f;
+    context->RSSetViewports(1, &shadowViewport);
+
+
+    auto shadowPixelShader = std::make_shared<PixelShader>(Device, L"ShadowPixelShader.hlsl");
+    context->PSSetShader(shadowPixelShader->GetShader(), nullptr, 0);
+
+
+    // Set the vertex and pixel shaders for shadow mapping
+    auto shadowVertexShader = std::make_shared<VertexShader>(Device, L"ShadowVertexShader.hlsl", shadowPixelShader.get());
+    context->VSSetShader(shadowVertexShader->GetShader(), nullptr, 0);
+
+    
+    
+
+    DirectX::XMFLOAT3A Lightlocation = { -2.0f,1.0f,1.0f };
+
+    DirectX::XMMATRIX lightProjectionMatrix = DirectX::XMMatrixPerspectiveFovLH(DirectX::XM_PIDIV2, 1.0f, 12.f, 50.f);
+
+    DirectX::XMFLOAT3 eye = { 0.0f, 2.0f, -5.0f }; // Move the camera away from the target
+    DirectX::XMFLOAT3 at = { 0.0f, 0.0f, 0.0f };
+    DirectX::XMFLOAT3 up = { 0.0f, 1.0f, 0.0f };
+
+    DirectX::XMMATRIX lightviewMatrix = DirectX::XMMatrixLookAtLH(
+
+        DirectX::XMLoadFloat3(&at),   // Camera position
+        DirectX::XMLoadFloat3(&eye),     // Target we're looking at
+        DirectX::XMLoadFloat3(&up)          // Up direction
+
+    );
+
+    std::vector<DirectX::XMMATRIX> initialLightPosition = {
+
+      lightviewMatrix,
+      lightProjectionMatrix
+    };
+
+    LightPositionConstantBuffer->Update(D3DDeviceContext, initialLightPosition);
+
+    // Draw the shadow-casting geometry
+    UINT indexCount = static_cast<UINT>(CubeIndex.size());
+    context->DrawIndexed(indexCount, 0, 0);
+}

@@ -15,6 +15,7 @@
 #include "CubeDrawable.h"
 #include "Light.h"
 #include "MeshDrawable.h"
+#include"SkyBox.h"
 
 class D3D11
 {
@@ -54,8 +55,8 @@ private:
 
     std::vector<std::shared_ptr<Light>> Lights;
   
-
     int LightNumber = 0;
+    int CubeNumber = 0;
 
 
 public:

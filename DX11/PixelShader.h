@@ -25,6 +25,11 @@ public:
 
     }
 
+    ID3D11PixelShader* GetShader() {
+
+        return pPixelShader.Get();
+    }
+
     friend class VertexShader;
     friend class InputLayout;
 

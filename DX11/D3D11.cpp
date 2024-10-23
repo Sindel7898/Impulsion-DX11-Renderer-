@@ -70,7 +70,7 @@ D3D11::D3D11(Window* windowApp){
 
 
 
-    //// Creating a depth stencil state and setting it to the OUT PUT MERGER //////////////////////////////////////////////////// 
+    //// Creating a depth stencil state and setting it to the OUTPUT MERGER //////////////////////////////////////////////////// 
    
     D3D11_DEPTH_STENCIL_DESC depthStencilDesc{};
     depthStencilDesc.DepthEnable = TRUE;  // Enable depth testing
@@ -112,6 +112,8 @@ D3D11::D3D11(Window* windowApp){
 
 
     D3D11_RASTERIZER_DESC rasterizerDesc{};
+   // rasterizerDesc.FillMode = D3D11_FILL_WIREFRAME;      // Render filled triangles
+
     rasterizerDesc.FillMode = D3D11_FILL_SOLID;      // Render filled triangles
     rasterizerDesc.CullMode = D3D11_CULL_BACK;       // Cull back-facing triangles
     rasterizerDesc.FrontCounterClockwise = FALSE;    // Use clockwise winding order for front faces
@@ -136,15 +138,12 @@ D3D11::D3D11(Window* windowApp){
 
 
         Lights.push_back(std::make_shared<Light>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, Lightlocation, LightNumber++));
-        Lights.push_back(std::make_shared<Light>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, Lightlocation, LightNumber++));
-        Lights.push_back(std::make_shared<Light>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, Lightlocation, LightNumber++));
-        Lights.push_back(std::make_shared<Light>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, Lightlocation, LightNumber++));
+       
 
-
-        Model = std::make_shared<MeshDrawable>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, Modellocation, Lights);
-
+        Model = std::make_shared<MeshDrawable>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, Modellocation);
     
-       Cube.push_back(std::make_shared<CubeDrawable>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, Cubelocation, Lights)); // Adjust parameters as needed
+        //Cube.push_back(std::make_shared<CubeDrawable>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, Cubelocation, CubeNumber++)); // Adjust parameters as needed
+        //Cube.push_back(std::make_shared<CubeDrawable>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, Cubelocation, CubeNumber++)); // Adjust parameters as needed
 
         int visibleCubeCount = Cube.size();
         std::cout << "Total number of cubes on screen: " << visibleCubeCount << std::endl;
@@ -155,6 +154,7 @@ D3D11::D3D11(Window* windowApp){
 
     
     void D3D11::Update() {
+      
 
         ClearBuffer(0.0f, 0.0f, 0.0f);
 
@@ -167,8 +167,9 @@ D3D11::D3D11(Window* windowApp){
         ImGui::End();
        
 
-      if (ImGui::Button("Create Light"))
+      if (ImGui::Button("Create Light") && LightNumber <5)
         {
+         
             DirectX::XMFLOAT3A Lightlocation = { -2.0f + LightNumber * 1.0f, 1.0f, 1.0f }; 
 
             Lights.push_back(std::make_shared<Light>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, Lightlocation, LightNumber++));
@@ -177,13 +178,18 @@ D3D11::D3D11(Window* windowApp){
 
         Model->Update(Lights);
 
-       for (int i = 0; i < Cube.size(); i++) {
 
-            Cube[i]->Update();
-         
-            Cube[i]->Draw();
-            
-        }
+
+      
+
+
+    //for (int i = 0; i < Cube.size(); i++) {
+
+    //        Cube[i]->Update(Lights);
+    //     
+    //        Cube[i]->Draw();
+    //        
+    //    }
 
         Model->Draw();
 
@@ -195,6 +201,8 @@ D3D11::D3D11(Window* windowApp){
 
         }
 
+
+        
         ImGui::Render();
         ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
     }
