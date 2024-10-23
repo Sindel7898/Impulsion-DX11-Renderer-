@@ -1,0 +1,151 @@
+Package: vcpkg-cmake
+Version: 2024-04-18
+Architecture: x64-windows
+Multi-Arch: same
+Abi: 23f43807424e3e46bd63379e7992e670019f40263fda558cfdf8090b21a7ee58
+Status: install ok installed
+
+Package: zlib
+Version: 1.3.1
+Depends: vcpkg-cmake
+Architecture: x64-windows
+Multi-Arch: same
+Abi: 40036d462e9c612c7cdf39fe08ce2fde59473e53051edc04a64d830feca1cab2
+Description: A compression library
+Status: install ok installed
+
+Package: vcpkg-cmake-config
+Version: 2024-05-23
+Architecture: x64-windows
+Multi-Arch: same
+Abi: 30296d0d501f994e5dc31310ff77afdffe42616ac8103e040a521ce47d03af7d
+Status: install ok installed
+
+Package: utfcpp
+Version: 4.0.5
+Depends: vcpkg-cmake, vcpkg-cmake-config
+Architecture: x64-windows
+Multi-Arch: same
+Abi: 49c2b8909a4dba8cb050cd4c3367f3279c3c3e2d1b8e411c59acc64701027080
+Description: UTF-8 with C++ in a Portable Way
+Status: install ok installed
+
+Package: stb
+Version: 2023-04-11
+Port-Version: 1
+Architecture: x64-windows
+Multi-Arch: same
+Abi: 95ec0264af7eb1e29ce23464d0a4e1a1da7c632878cc84157a7d88793b35c2cf
+Description: public domain header-only libraries
+Status: install ok installed
+
+Package: rapidjson
+Version: 2023-07-17
+Port-Version: 1
+Depends: vcpkg-cmake, vcpkg-cmake-config
+Architecture: x64-windows
+Multi-Arch: same
+Abi: c086876e11ccacc6485db7cd6994c2633a469d8e82d4acd8f9912d46948530cc
+Description: A fast JSON parser/generator for C++ with both SAX/DOM style API <http://rapidjson.org/>
+Status: install ok installed
+
+Package: pugixml
+Version: 1.14
+Depends: vcpkg-cmake, vcpkg-cmake-config
+Architecture: x64-windows
+Multi-Arch: same
+Abi: 0cb63ccdbddf8152e47a2715ef5f6af55ad6f7a1260fd3bdd27eabe1143bc1c1
+Description: Light-weight, simple and fast XML parser for C++ with XPath support
+Status: install ok installed
+
+Package: polyclipping
+Version: 6.4.2
+Port-Version: 12
+Depends: vcpkg-cmake, vcpkg-cmake-config
+Architecture: x64-windows
+Multi-Arch: same
+Abi: bfe2a6dd67fe76b2810be9126747f1b31b08368f0a29d9dc8b06c64df366c226
+Description: The Clipper library performs clipping and offsetting for both lines and polygons. All four boolean clipping operations are supported - intersection, union, difference and exclusive-or. Polygons can be of any shape including self-intersecting polygons.
+Status: install ok installed
+
+Package: vcpkg-cmake-get-vars
+Version: 2023-12-31
+Depends: vcpkg-cmake
+Architecture: x64-windows
+Multi-Arch: same
+Abi: a53b3f694eaf859d2bfdcb3da81e3539fabe7d660a827e0b84725a764d79523b
+Status: install ok installed
+
+Package: minizip
+Version: 1.3.1
+Depends: vcpkg-cmake, vcpkg-cmake-config, vcpkg-cmake-get-vars, zlib
+Architecture: x64-windows
+Multi-Arch: same
+Abi: 91fb31e7be529d529638133f04e5c000ec4e63cf54f24d63650102ca2fcfb590
+Description: Minizip zip file manipulation library
+Status: install ok installed
+
+Package: kubazip
+Version: 0.2.6
+Depends: vcpkg-cmake, vcpkg-cmake-config
+Architecture: x64-windows
+Multi-Arch: same
+Abi: 0a9595dcaf691eb49d26ee280f9cf4514e17e3b5cc729e83af63ec18c4c3f80c
+Description: A portable, simple zip library written in C
+Status: install ok installed
+
+Package: jhasse-poly2tri
+Version: 2023-12-27
+Depends: vcpkg-cmake, vcpkg-cmake-config
+Architecture: x64-windows
+Multi-Arch: same
+Abi: 286a9e5d42c2ea6ebb786d4859e47b8e3d4fdbe316ae5b9097afd18902591ef1
+Description: Sweep-line algorithm for constrained Delaunay triangulation
+Status: install ok installed
+
+Package: draco
+Version: 1.5.7
+Depends: vcpkg-cmake, vcpkg-cmake-config
+Architecture: x64-windows
+Multi-Arch: same
+Abi: 893469a40113e718a4851c4a929a3af490acb5ee0622ff5e36b0ec2d8264101a
+Description: A library for compressing and decompressing 3D geometric meshes and point clouds. It is intended to improve the storage and transmission of 3D graphics.
+Status: install ok installed
+
+Package: assimp
+Version: 5.4.0
+Depends: draco, jhasse-poly2tri, kubazip, minizip, polyclipping, pugixml, rapidjson, stb, utfcpp, vcpkg-cmake, vcpkg-cmake-config, zlib
+Architecture: x64-windows
+Multi-Arch: same
+Abi: 77f8e2e0d8acb33d6966fa4287dbe644e50cba74e5ff93d664339e1e1ab70d7b
+Description: The Open Asset import library
+Status: install ok installed
+
+Package: directxmath
+Version: 2024-02-14
+Port-Version: 1
+Depends: vcpkg-cmake, vcpkg-cmake-config
+Architecture: x64-windows
+Multi-Arch: same
+Abi: 5d585ae96a57ca1f48737435b74f2ca2a14c2c99f6518ed1b70af3fb8ccd1cb2
+Description: DirectXMath SIMD C++ math library
+Status: install ok installed
+
+Package: directxtk
+Version: 2024-06-04
+Depends: directxmath, vcpkg-cmake, vcpkg-cmake-config
+Architecture: x64-windows
+Multi-Arch: same
+Abi: acc0ab08f9eff9c4972abb7e406333d4a21129f6ea568c11f2679217e934c283
+Description: A collection of helper classes for writing DirectX 11.x code in C++.
+Status: install ok installed
+
+Package: imgui
+Version: 1.90.7
+Depends: vcpkg-cmake, vcpkg-cmake-config
+Architecture: x64-windows
+Multi-Arch: same
+Abi: 536fbfe4cfd821190d1b5a23db44a2811fc8828a3968ff27f7cfd0c5577f2cd0
+Description: Bloat-free Immediate Mode Graphical User interface for C++ with minimal dependencies.
+Status: install ok installed
+
