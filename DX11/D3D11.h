@@ -52,6 +52,7 @@ private:
     std::vector<std::shared_ptr<CubeDrawable>> Cube;
 
     std::shared_ptr<MeshDrawable> Model;
+    std::shared_ptr<MeshDrawable> Sphere;
 
     std::vector<std::shared_ptr<Light>> Lights;
   

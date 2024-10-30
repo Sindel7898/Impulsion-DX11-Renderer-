@@ -165,6 +165,8 @@ void Light::Update()
     ImGui::Begin("Light Controls");
 
     ImGui::SliderFloat3(("Light " + std::to_string(LightNumber) + " Position").c_str(), &Location.x, -50.0f, 50.0f);
+    ImGui::SliderFloat3(("Light " + std::to_string(LightNumber) + "Direction").c_str(), &Direction.x, -1.0f, 1.0f);
+
     //ImGui::SliderFloat3(("Light " + std::to_string(LightNumber) + " Attenition").c_str(), &Attenuition.x, -10.0f, 10.0f);
     ImGui::SliderFloat2(("Light " + std::to_string(LightNumber) + " Cone Details").c_str(), &ConeDetails.x, 0.0f, 100.0f);
     //ImGui::SliderFloat(("Light " + std::to_string(LightNumber) + " quadraticAtt").c_str(), &quadraticAtt, -10.0f, 10.0f);

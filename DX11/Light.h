@@ -37,7 +37,7 @@ public:
 private:
 
     DirectX::XMFLOAT3A Location;
-    DirectX::XMFLOAT3A Direction{ 0.0f,1.0f,0.0f };
+    DirectX::XMFLOAT3A Direction{ 0.0f,-1.0f,0.0f };
     DirectX::XMFLOAT4A BaseColor = { 1.0f,1.0f,1.0f,1.0f };
     DirectX::XMFLOAT2A ConeDetails = { 30.0f,50.0f };
     DirectX::XMFLOAT3A Attenuition{ 0.5f,0.125f,0.0f };

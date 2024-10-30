@@ -161,7 +161,9 @@ float4 PSMain(VSOUT input) : SV_TARGET
         LightData light = lights[i];
         
 
-        float3 lightVector = normalize(light.lightPosition - input.worldPosition.xyz);
+       // float3 lightVector = normalize(light.lightPosition - input.worldPosition.xyz);
+        float3 lightVector = -normalize(light.lightDirection);
+
         float distance = length(light.lightPosition - input.worldPosition.xyz);
         float3 HAlfWayVector = normalize(lightVector + input.viewVector); // Halfway vector
 
@@ -193,8 +195,9 @@ float4 PSMain(VSOUT input) : SV_TARGET
         if (light.LightType.x == 0.0f)
         {
            // finalColor += textureColor * (Ambient + diffuse * attenuation) + (specular * attenuation);
-            finalColor += textureColor * (Ambient + diffuse * attenuation) + (float4(specular, 1.0) * attenuation);
+          //  finalColor += textureColor * (Ambient + diffuse * attenuation) + (float4(specular, 1.0) * attenuation);
 
+            finalColor += textureColor * (Ambient + diffuse) + (float4(specular, 1.0));
 
         }
         

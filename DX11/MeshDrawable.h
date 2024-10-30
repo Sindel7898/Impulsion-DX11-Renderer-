@@ -23,7 +23,7 @@ class MeshDrawable : public Drawable,public MeshLoader {
 
 public:
 
-    MeshDrawable(ID3D11Device* device, ID3D11DeviceContext* d3dDeviceContext, Window* windowContextHolder, DirectX::XMFLOAT3 location);
+    MeshDrawable(ID3D11Device* device, ID3D11DeviceContext* d3dDeviceContext, Window* windowContextHolder, DirectX::XMFLOAT3 location, std::string ModelFilePath);
 
     void Update(std::vector<std::shared_ptr<Light>>& Lights);
 

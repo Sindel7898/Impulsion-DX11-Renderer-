@@ -2,7 +2,7 @@
 
 
 
-MeshDrawable::MeshDrawable(ID3D11Device* device, ID3D11DeviceContext* d3dDeviceContext, Window* windowContextHolder, DirectX::XMFLOAT3 location)
+MeshDrawable::MeshDrawable(ID3D11Device* device, ID3D11DeviceContext* d3dDeviceContext, Window* windowContextHolder, DirectX::XMFLOAT3 location, std::string ModelFilePath)
     : Location(location),
     Device(device), D3DDeviceContext(d3dDeviceContext),
     WindowContextHolder1(windowContextHolder)
@@ -15,7 +15,7 @@ MeshDrawable::MeshDrawable(ID3D11Device* device, ID3D11DeviceContext* d3dDeviceC
 
     ID3D11ShaderResourceView* CubeTextureView = nullptr;
 
-    LoadModel("Texture/models/HELMET/model.obj");
+    LoadModel(ModelFilePath);
 
     auto vertexBuffer = std::make_shared<VertexBuffer<MeshLoader::ModelVertex>>(device, vertices, 1, 0);
     AddBindable(vertexBuffer);

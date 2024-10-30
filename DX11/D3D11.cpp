@@ -149,8 +149,9 @@ D3D11::D3D11(Window* windowApp){
         Lights.push_back(std::make_shared<Light>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, Lightlocation, LightNumber++));
        
 
-        Model = std::make_shared<MeshDrawable>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, Modellocation);
-    
+       Model = std::make_shared<MeshDrawable>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, Modellocation, "Texture/models/HELMET/model.obj");
+        //Sphere = std::make_shared<MeshDrawable>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, Modellocation, "Texture/models/HELMET/Sphere.obj");
+
         Cube.push_back(std::make_shared<CubeDrawable>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, Cubelocation, CubeNumber++)); // Adjust parameters as needed
         //Cube.push_back(std::make_shared<CubeDrawable>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, Cubelocation, CubeNumber++)); // Adjust parameters as needed
 
@@ -185,10 +186,8 @@ D3D11::D3D11(Window* windowApp){
 
         }
 
-        Model->Update(Lights);
-
-
-
+      Model->Update(Lights);
+        //Sphere->Update(Lights);
       
 
 
@@ -199,8 +198,8 @@ D3D11::D3D11(Window* windowApp){
             
         }
 
-        Model->Draw();
-
+    Model->Draw();
+        //Sphere->Draw();
         for (int i = 0; i < Lights.size(); i++) {
 
             Lights[i]->Update();
