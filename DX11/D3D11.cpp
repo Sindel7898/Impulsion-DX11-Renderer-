@@ -41,19 +41,28 @@ D3D11::D3D11(Window* windowApp){
     SwapChainDesc.SampleDesc.Count = 1;  // No MSAA support for FLIP_SEQUENTIAL
     SwapChainDesc.SampleDesc.Quality = 0;
     SwapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-    SwapChainDesc.BufferCount = 2;  // At least 2 buffers required for FLIP_SEQUENTIAL
+    SwapChainDesc.BufferCount = 3;  // At least 2 buffers required for FLIP_SEQUENTIAL
     SwapChainDesc.OutputWindow = window;
     SwapChainDesc.Windowed = TRUE;  // Typically used for windowed applications
     SwapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;  // Use the flip model
     SwapChainDesc.Flags = 0;
+
+
+    D3D_FEATURE_LEVEL featureLevels[] = {
+    D3D_FEATURE_LEVEL_11_0,
+    D3D_FEATURE_LEVEL_10_1,
+    D3D_FEATURE_LEVEL_10_0
+};
+
+    UINT numFeatureLevels = ARRAYSIZE(featureLevels);
 
     CHECK_HRESULT(D3D11CreateDeviceAndSwapChain(
         nullptr,
         D3D_DRIVER_TYPE::D3D_DRIVER_TYPE_HARDWARE,
         nullptr,
           D3D11_CREATE_DEVICE_DEBUG,
-        nullptr,
-        0,
+        featureLevels,
+        numFeatureLevels,
         D3D11_SDK_VERSION,
         &SwapChainDesc,
         &SwapChain, 
@@ -142,7 +151,7 @@ D3D11::D3D11(Window* windowApp){
 
         Model = std::make_shared<MeshDrawable>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, Modellocation);
     
-        //Cube.push_back(std::make_shared<CubeDrawable>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, Cubelocation, CubeNumber++)); // Adjust parameters as needed
+        Cube.push_back(std::make_shared<CubeDrawable>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, Cubelocation, CubeNumber++)); // Adjust parameters as needed
         //Cube.push_back(std::make_shared<CubeDrawable>(D3DDevice.Get(), D3DDeviceContext.Get(), windowContextHolder, Cubelocation, CubeNumber++)); // Adjust parameters as needed
 
         int visibleCubeCount = Cube.size();
@@ -167,7 +176,7 @@ D3D11::D3D11(Window* windowApp){
         ImGui::End();
        
 
-      if (ImGui::Button("Create Light") && LightNumber <5)
+      if (ImGui::Button("Create Light") && LightNumber <7)
         {
          
             DirectX::XMFLOAT3A Lightlocation = { -2.0f + LightNumber * 1.0f, 1.0f, 1.0f }; 
@@ -183,13 +192,12 @@ D3D11::D3D11(Window* windowApp){
       
 
 
-    //for (int i = 0; i < Cube.size(); i++) {
+       for (int i = 0; i < Cube.size(); i++) {
 
-    //        Cube[i]->Update(Lights);
-    //     
-    //        Cube[i]->Draw();
-    //        
-    //    }
+            Cube[i]->Update(Lights);
+            Cube[i]->Draw();
+            
+        }
 
         Model->Draw();
 

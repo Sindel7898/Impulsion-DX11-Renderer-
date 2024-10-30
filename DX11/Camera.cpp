@@ -61,7 +61,6 @@ void Camera::Update(float deltaTime, GLFWwindow* window)
 		position.y += forward.y * cameraSpeed;
 		position.z += forward.z * cameraSpeed;
 
-		std::cout << "W presses" << std::endl;
 	}
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
 		position.x -= forward.x * cameraSpeed;

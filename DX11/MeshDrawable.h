@@ -17,6 +17,7 @@
 #include "Light.h"
 #include "Texture.h"
 #include "MeshLoader.h"
+#include <WICTextureLoader.h>
 
 class MeshDrawable : public Drawable,public MeshLoader {
 

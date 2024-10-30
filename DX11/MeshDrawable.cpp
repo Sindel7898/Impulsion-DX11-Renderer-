@@ -10,7 +10,11 @@ MeshDrawable::MeshDrawable(ID3D11Device* device, ID3D11DeviceContext* d3dDeviceC
 
     WindowContextHolder1 = windowContextHolder;
 
-   
+
+    ID3D11Resource* CubeTexture = nullptr;
+
+    ID3D11ShaderResourceView* CubeTextureView = nullptr;
+
     LoadModel("Texture/models/HELMET/model.obj");
 
     auto vertexBuffer = std::make_shared<VertexBuffer<MeshLoader::ModelVertex>>(device, vertices, 1, 0);
@@ -49,6 +53,8 @@ MeshDrawable::MeshDrawable(ID3D11Device* device, ID3D11DeviceContext* d3dDeviceC
 
     std::vector<std::shared_ptr<Light>> FaulseLights;
 
+    FaulseLights.push_back(std::make_shared<Light>(device, d3dDeviceContext, windowContextHolder, Lightlocation, LightNumber++));
+    FaulseLights.push_back(std::make_shared<Light>(device, d3dDeviceContext, windowContextHolder, Lightlocation, LightNumber++));
     FaulseLights.push_back(std::make_shared<Light>(device, d3dDeviceContext, windowContextHolder, Lightlocation, LightNumber++));
     FaulseLights.push_back(std::make_shared<Light>(device, d3dDeviceContext, windowContextHolder, Lightlocation, LightNumber++));
     FaulseLights.push_back(std::make_shared<Light>(device, d3dDeviceContext, windowContextHolder, Lightlocation, LightNumber++));
@@ -93,6 +99,11 @@ MeshDrawable::MeshDrawable(ID3D11Device* device, ID3D11DeviceContext* d3dDeviceC
 
     auto MetalicTexture = std::make_shared<Texture>(Device, D3DDeviceContext, 4, L"Texture/models/HELMET/MetalicTexture.jpeg");
     AddBindable(MetalicTexture);
+
+
+    auto AmbientTexture = std::make_shared<Texture>(Device, D3DDeviceContext, 5, L"Texture/models/HELMET/AOTexture.jpeg");
+    AddBindable(AmbientTexture);
+
     
     auto indexBuffer = std::make_shared<IndexBuffer>(device, indices);
     AddBindable(indexBuffer);
@@ -100,11 +111,11 @@ MeshDrawable::MeshDrawable(ID3D11Device* device, ID3D11DeviceContext* d3dDeviceC
     ////////////////////////////////////////////////////////////////////
 
     ////Create pixel and vertex shaders//////////////////////////////////////////////////////
-    auto pixelShader = std::make_shared<PixelShader>(device, L"DiffuseLighting.hlsl");
+    auto pixelShader = std::make_shared<PixelShader>(device, L"LightModel_PS.hlsl");
     AddBindable(pixelShader);
 
 
-    auto vertexShader = std::make_shared<VertexShader>(device, L"BoxVertexShader.hlsl", pixelShader.get());
+    auto vertexShader = std::make_shared<VertexShader>(device, L"Model_VS.hlsl", pixelShader.get());
     AddBindable(vertexShader);
     ///////////////////////////////////////////////////////////////////////////////////////////
 

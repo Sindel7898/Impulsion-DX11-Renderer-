@@ -29,7 +29,6 @@ public:
 
     virtual void Draw() override;
 
-    void RenderShadowMap(ID3D11DeviceContext* context, ShadowMap* shadow);
 
 
 
@@ -78,7 +77,6 @@ public:
     std::shared_ptr<ConstantBuffer<VERTEXDATA>> Matrix;
 
     std::shared_ptr<ConstantBuffer<LightData>> LightBuffer;
-    std::shared_ptr<ConstantBuffer<DirectX::XMMATRIX>> LightPositionConstantBuffer;
 
     int CubeNumber;
 private: 
